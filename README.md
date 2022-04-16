@@ -1,0 +1,2 @@
+# HoshiLinter
+Simple linter
