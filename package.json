@@ -1,0 +1,24 @@
+{
+  "name": "hoshilinter",
+  "version": "1.0.0",
+  "description": "A simple linter, that allows you to detect some errors and fix it + make your code better",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/just-hoshinon/HoshiLinter.git"
+  },
+  "keywords": [
+    "linter",
+    "prettier",
+    "coursework"
+  ],
+  "author": "Sviatoslav Shesterov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/just-hoshinon/HoshiLinter/issues"
+  },
+  "homepage": "https://github.com/just-hoshinon/HoshiLinter#readme"
+}
