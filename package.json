@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A simple linter, that allows you to detect some errors and fix it + make your code better",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
