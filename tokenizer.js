@@ -8,7 +8,7 @@ const keywords = [
   "super", "switch", "static", "this", "throw", "try", "true", "typeof", "var", "void", "while", "with", "yield"
 ];
 const filteredTypes = [
-  "end-of-line", "whitespace", "semicolon"
+  "end-of-line", "whitespace", "semicolon", "undefined"
 ];
 
 export class Tokenizer {
@@ -74,12 +74,12 @@ export class Tokenizer {
     token.value = this.getWholeWord();
 
     if (keywords.includes(token.value)) token.type = "keyword";
-    else token.type = "variable";
+    else token.type = "identifier";
   }
 
   getWholeWord() {
     let word = this.currentSymbol;
-    while (!this.nextSymbol().matches(/[; ]/g)) {
+    while (this.nextSymbol().matches(/[a-zA-Z0-9_$]/g)) {
       word += this.next();
     }
     return word;
@@ -94,17 +94,17 @@ export class Tokenizer {
     let tex = this.text.slice(this.currentSymbolIndex);
 
     if (this.currentSymbol === '"') {
-      if (tex.matches(/.*(?<!\\)".*/g)) {
+      if (tex.matches(/.*(?<!\\)".*/s)) {
         token.value = '"' + (tex.split(/(?<!\\)"/)[1]) + '"';
       }
     }
     if (this.currentSymbol === "'") {
-      if (tex.matches(/.*(?<!\\)'.*/g)) {
+      if (tex.matches(/.*(?<!\\)'.*/s)) {
         token.value = "'" + (tex.split(/(?<!\\)'/)[1]) + "'";
       }
     }
     if (this.currentSymbol === "`") {
-      if (tex.matches(/.*(?<!\\)`.*/g)) {
+      if (tex.matches(/.*(?<!\\)`.*/s)) {
         token.value = "`" + (tex.split(/(?<!\\)`/)[1]) + "`";
       }
     }
