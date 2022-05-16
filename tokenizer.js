@@ -1,6 +1,5 @@
 import {Token} from "./token.js";
 
-//const typeMap = new Map([["number", /[0-9]+ /g], ["end-of-line", /\n/g], ""]);
 const keywords = [
   "await", "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete",
   "do", "else", "enum", "export", "extends", "false", "finally", "for", "function", "if", "implements", "import",
@@ -27,7 +26,7 @@ export class Tokenizer {
 
   tokenize(){
     this.currentSymbol = this.text[this.currentSymbolIndex];
-    while (this.currentSymbol != null) {
+    while (this.currentSymbol !== null && this.currentSymbol !== undefined) {
       const token = this.createToken();
       this.allTokens.push(token);
       if (!filteredTypes.includes(token.type)) this.filteredTokens.push(token);
@@ -52,6 +51,7 @@ export class Tokenizer {
     if (this.currentSymbol.matches(/[a-zA-Z_$]/)) this.createWordToken(futureToken);
     if (this.currentSymbol.matches(/["'`]/)) this.createStringToken(futureToken);
     if (this.currentSymbol.matches(/[{}\[\]()]/)) this.createBracketsToken(futureToken);
+    if (this.currentSymbol.matches(/[><!]/g)) this.createComparingToken(futureToken);
     if (this.currentSymbol === ";") this.createSemicolonToken(futureToken);
     if (this.currentSymbol === " ") this.createWhitespaceToken(futureToken);
     if (this.currentSymbol === "=") this.createAssignmentOrLogicalToken(futureToken);
@@ -137,12 +137,27 @@ export class Tokenizer {
 
   createAssignmentOrLogicalToken(token) {
     if (this.nextSymbol() === "=") {
-      token.type = "logical-operator";
+      token.type = "comparing-operator";
       token.value = "==";
+      if (this.nextSymbol(2) === "="){
+        token.value += "=";
+        this.next();
+      }
       this.next();
     } else {
       token.type = "assignment";
       token.value = "=";
+    }
+  }
+
+  createComparingToken(token) {
+    token.type = "comparing-operator";
+    token.value = this.currentSymbol;
+    if (this.nextSymbol() === "="){
+      token.value += "=";
+    }
+    if (this.nextSymbol(2) === "=") {
+      token.value += "=";
     }
   }
 
@@ -153,8 +168,8 @@ export class Tokenizer {
     return this.currentSymbol;
   }
 
-  nextSymbol() {
-    return this.text[this.currentSymbolIndex + 1];
+  nextSymbol(amount = 1) {
+    return this.text[this.currentSymbolIndex + amount];
   }
 
   log(fullLog = false){
