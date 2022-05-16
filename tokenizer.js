@@ -53,6 +53,8 @@ export class Tokenizer {
     if (this.currentSymbol.matches(/[{}\[\]()]/)) this.createBracketsToken(futureToken);
     if (this.currentSymbol.matches(/[><!]/g)) this.createComparingToken(futureToken);
     if (this.currentSymbol === ";") this.createSemicolonToken(futureToken);
+    if (this.currentSymbol === ".") this.createDotToken(futureToken);
+    if (this.currentSymbol === ",") this.createCommaToken(futureToken);
     if (this.currentSymbol === " ") this.createWhitespaceToken(futureToken);
     if (this.currentSymbol === "=") this.createAssignmentOrLogicalToken(futureToken);
 
@@ -159,6 +161,16 @@ export class Tokenizer {
     if (this.nextSymbol(2) === "=") {
       token.value += "=";
     }
+  }
+
+  createDotToken(token) {
+    token.type = "dot";
+    token.value = ".";
+  }
+
+  createCommaToken(token) {
+    token.type = "comma";
+    token.type = ",";
   }
 
   next(amount = 1) {
