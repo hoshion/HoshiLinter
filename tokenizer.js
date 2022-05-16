@@ -157,7 +157,8 @@ export class Tokenizer {
     return this.text[this.currentSymbolIndex + 1];
   }
 
-  log(){
-    console.table(this.filteredTokens);
+  log(fullLog = false){
+    if (fullLog) console.table(this.allTokens);
+    else console.table(this.filteredTokens);
   }
 }

@@ -7,8 +7,10 @@ String.prototype.matches = function (regexp) {
   return matches[0] === this;
 }
 
+const fullLog = process.argv.length !== 2 && process.argv[2] === "--fullLog";
+
 const file = fs.readFileSync("./test.js").toString();
 const tokenizer = new Tokenizer(file);
 
 tokenizer.tokenize();
-tokenizer.log();
+tokenizer.log(fullLog);
