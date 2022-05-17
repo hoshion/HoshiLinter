@@ -47,16 +47,18 @@ export class Tokenizer {
   createToken() {
     let futureToken = new Token(this.currentRow, this.currentCol);
     if (this.currentSymbol.matches(/[0-9]/)) this.createNumberToken(futureToken);
-    if (this.currentSymbol === "\n") this.createEndOfLineToken(futureToken);
-    if (this.currentSymbol.matches(/[a-zA-Z_$]/)) this.createWordToken(futureToken);
-    if (this.currentSymbol.matches(/["'`]/)) this.createStringToken(futureToken);
-    if (this.currentSymbol.matches(/[{}\[\]()]/)) this.createBracketsToken(futureToken);
-    if (this.currentSymbol.matches(/[><!]/g)) this.createComparingToken(futureToken);
-    if (this.currentSymbol === ";") this.createSemicolonToken(futureToken);
-    if (this.currentSymbol === ".") this.createDotToken(futureToken);
-    if (this.currentSymbol === ",") this.createCommaToken(futureToken);
-    if (this.currentSymbol === " ") this.createWhitespaceToken(futureToken);
-    if (this.currentSymbol === "=") this.createAssignmentOrLogicalToken(futureToken);
+    else if (this.currentSymbol === "\n") this.createEndOfLineToken(futureToken);
+    else if (this.currentSymbol.matches(/[a-zA-Z_$]/)) this.createWordToken(futureToken);
+    else if (this.currentSymbol.matches(/["'`]/)) this.createStringToken(futureToken);
+    else if (this.currentSymbol.matches(/[{}\[\]()]/)) this.createBracketsToken(futureToken);
+    else if (this.currentSymbol.matches(/[><!]/g)) this.createComparingToken(futureToken);
+    else if (this.currentSymbol.matches(/[|&]/g)) this.createLogicalOrBitToken(futureToken);
+    else if (this.currentSymbol === "/") this.createRegexToken(futureToken);
+    else if (this.currentSymbol === ";") this.createSemicolonToken(futureToken);
+    else if (this.currentSymbol === ".") this.createDotToken(futureToken);
+    else if (this.currentSymbol === ",") this.createCommaToken(futureToken);
+    else if (this.currentSymbol === " ") this.createWhitespaceToken(futureToken);
+    else if (this.currentSymbol === "=") this.createAssignmentOrComparingToken(futureToken);
 
     return futureToken;
   }
@@ -96,17 +98,17 @@ export class Tokenizer {
     let tex = this.text.slice(this.currentSymbolIndex);
 
     if (this.currentSymbol === '"') {
-      if (tex.matches(/.*(?<!\\)".*/s)) {
+      if (tex.matches(/".*(?<!\\)".*/s)) {
         token.value = '"' + (tex.split(/(?<!\\)"/)[1]) + '"';
       }
     }
     if (this.currentSymbol === "'") {
-      if (tex.matches(/.*(?<!\\)'.*/s)) {
+      if (tex.matches(/'.*(?<!\\)'.*/s)) {
         token.value = "'" + (tex.split(/(?<!\\)'/)[1]) + "'";
       }
     }
     if (this.currentSymbol === "`") {
-      if (tex.matches(/.*(?<!\\)`.*/s)) {
+      if (tex.matches(/`.*(?<!\\)`.*/s)) {
         token.value = "`" + (tex.split(/(?<!\\)`/)[1]) + "`";
       }
     }
@@ -137,15 +139,15 @@ export class Tokenizer {
     }
   }
 
-  createAssignmentOrLogicalToken(token) {
+  createAssignmentOrComparingToken(token) {
     if (this.nextSymbol() === "=") {
       token.type = "comparing-operator";
       token.value = "==";
-      if (this.nextSymbol(2) === "="){
+      this.next();
+      if (this.nextSymbol() === "="){
         token.value += "=";
         this.next();
       }
-      this.next();
     } else {
       token.type = "assignment";
       token.value = "=";
@@ -157,9 +159,13 @@ export class Tokenizer {
     token.value = this.currentSymbol;
     if (this.nextSymbol() === "="){
       token.value += "=";
-    }
-    if (this.nextSymbol(2) === "=") {
-      token.value += "=";
+      this.next();
+      if (this.nextSymbol() === "=") {
+        token.value += "=";
+        this.next();
+      }
+    } else if (this.currentSymbol === "!") {
+      token.type = "logical-operator";
     }
   }
 
@@ -170,7 +176,34 @@ export class Tokenizer {
 
   createCommaToken(token) {
     token.type = "comma";
-    token.type = ",";
+    token.value = ",";
+  }
+
+  createLogicalOrBitToken(token) {
+    if (this.nextSymbol() === this.currentSymbol) {
+      token.type = "logical-operator";
+      token.value = this.currentSymbol + this.currentSymbol;
+      this.next();
+    } else {
+      token.type = "bitwise-operator"
+      token.type = this.currentSymbol;
+    }
+  }
+
+  createRegexToken(token) {
+    let tex = this.text.slice(this.currentSymbolIndex);
+    if (tex.matches(/\/.*(?<!\\)\/.*/gs)) {
+      let unfiltered_flags = tex.split(/(?<!\\)\//gs)[2];
+      let flags = "";
+      for (let sym of unfiltered_flags) {
+        if (sym.matches(/[dgimsuy]/g)) flags += sym;
+        else break;
+      }
+      token.type = "regex";
+      token.value = "/" + tex.split(/(?<!\\)\//gs)[1] + "/" + flags;
+    }
+
+    this.next(token.value.length - 1);
   }
 
   next(amount = 1) {

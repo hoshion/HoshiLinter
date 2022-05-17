@@ -7,9 +7,11 @@ String.prototype.matches = function (regexp) {
   return matches[0] === this;
 }
 
-const fullLog = process.argv.length !== 2 && process.argv[2] === "--fullLog";
+const fileName = (process.argv[2] && process.argv[2] !== "--fullLog") ? process.argv[2] : "test.js";
+const fullLog = process.argv.includes("--fullLog");
 
-const file = fs.readFileSync("./test.js").toString();
+
+const file = fs.readFileSync(`./${fileName}`).toString();
 const tokenizer = new Tokenizer(file);
 
 tokenizer.tokenize();
