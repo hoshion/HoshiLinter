@@ -41,6 +41,7 @@ export class Tokenizer {
   currentCol = 1;
   currentSymbolIndex = 0;
   currentSymbol;
+  currentToken;
   filteredTokens = [];
   allTokens = [];
   isEndOfLine = false;
@@ -53,51 +54,47 @@ export class Tokenizer {
   tokenize(){
     this.currentSymbol = this.text[this.currentSymbolIndex];
     while (this.currentSymbol !== null && this.currentSymbol !== undefined) {
-      const token = this.createToken();
-      this.allTokens.push(token);
-      if (!filteredTypes.includes(token.type)) this.filteredTokens.push(token);
-      this.next(token.value.length);
+      this.createToken();
+      this.allTokens.push(this.currentToken);
+      if (!filteredTypes.includes(this.currentToken.type)) this.filteredTokens.push(this.currentToken);
+      this.next(this.currentToken.value.length);
     }
   }
 
   updateRowAndCol(amount = 1) {
-    if (this.isEndOfLine) {
-      this.currentRow++;
-      this.currentCol = 1;
-      this.isEndOfLine = false;
-    } else {
-      this.currentCol += amount;
+    switch (this.currentToken.type) {
+      case "end-of-line": {
+        this.currentRow++;
+        this.currentCol = 1;
+        break;
+      }
+      case "multiline-comment": {
+        this.currentRow += this.currentToken.value.split("\n").length - 1
+        this.currentCol = 1;
+        break;
+      }
+      default:
+        this.currentCol += amount;
     }
   }
 
   createToken() {
-    let futureToken = new Token(this.currentRow, this.currentCol);
+    this.currentToken = new Token(this.currentRow, this.currentCol);
 
     for (const [type, reg] of tokenTypes) {
-      const res = this.createTypeToken(type, reg, futureToken);
+      const res = this.createTypeToken(type, reg);
       if (res) break;
     }
 
-    return futureToken;
-
   }
 
-  createTypeToken(type, reg, token) {
+  createTypeToken(type, reg) {
     if (!this.checkingText.match(reg)) return false;
 
-    token.type = type;
-    if (type === "end-of-line") this.isEndOfLine = true;
-    token.value = this.checkingText.match(reg)[0];
-    token.length = token.value.length;
+    this.currentToken.type = type;
+    this.currentToken.value = this.checkingText.match(reg)[0];
+    this.currentToken.length = this.currentToken.value.length;
     return true;
-  }
-
-  get(amount = 1) {
-    let res = "";
-    for (let i = 0; i < amount; i++) {
-      res += this.text[this.currentSymbolIndex + i];
-    }
-    return res;
   }
 
   next(amount = 1) {
@@ -108,7 +105,7 @@ export class Tokenizer {
     return this.currentSymbol;
   }
 
-  log(fullLog = false){
+  log(fullLog = false) {
     if (fullLog) console.table(this.allTokens);
     else console.table(this.filteredTokens);
   }
