@@ -4,7 +4,7 @@ import fs from "fs"
 String.prototype.matches = function (regexp) {
   const matches = this.match(regexp);
   if (matches == null) return false;
-  return matches[0] === this;
+  return matches[0] === String(this);
 }
 
 const fileName = (process.argv[2] && process.argv[2] !== "--fullLog") ? process.argv[2] : "test.js";
