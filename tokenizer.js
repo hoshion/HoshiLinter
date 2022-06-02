@@ -7,7 +7,8 @@ const filteredTypes = [
 
 const tokenTypes = new Map([
   ["comment", /^\/\/.+/],
-  ["multiline-comment", /^\/\*.+\*\//s],
+  ["multiline-comment", /^\/\*.*?\*\//s],
+  ["regex-operator", /^\/.*?(?<!\\)\/[dgimsuy]*/s],
   ["arithmetic-operator", /^(\+\+|--|\*\*(?!=)|[+\-\/*%](?![=\-+*]))/],
   ["logical-operator", /^(\|\||&&|!)(?!=)/],
   ["dot-operator", /^\./],
@@ -20,14 +21,15 @@ const tokenTypes = new Map([
   ["nullish-operator", /^\?\?(?!=)/],
   ["opening-brace", /^{/],
   ["closing-brace", /^}/],
+  ["opening-bracket", /^\[/],
+  ["closing-bracket", /^]/],
   ["question-mark", /^\?/],
   ["colon", /^:/],
   ["bitwise-operator", /^(&(?!&)|\|(?!\|)|\^|<<|>>|>>>|~)(?!=)/],
   ["opening-parenthesis", /^\(/],
   ["closing-parenthesis", /^\)/],
   ["arrow-operator", /^=>/],
-  ["string", /^('.*(?<!\\)'|".*(?<!\\)"|`.*(?<!\\)`)/s],
-  ["regex-operator", /^\/.*(?<!\\)\/[dgimsuy]*/s],
+  ["string", /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
   ["end-of-line", /^(\r\n|\n)/],
   ["number", /^\d+/],
   ["keyword", keywordRegex],
@@ -44,7 +46,6 @@ export class Tokenizer {
   currentToken;
   filteredTokens = [];
   allTokens = [];
-  isEndOfLine = false;
 
   constructor(text) {
     this.text = text;
