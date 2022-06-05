@@ -5,7 +5,7 @@ const filteredTypes = [
   "end-of-line", "whitespace", "semicolon", "undefined"
 ];
 
-const tokenTypes = new Map([
+export const tokenTypes = new Map([
   ["comment", /^\/\/.+/],
   ["multiline-comment", /^\/\*.*?\*\//s],
   ["regex-operator", /^\/.*?(?<!\\)\/[dgimsuy]*/s],
