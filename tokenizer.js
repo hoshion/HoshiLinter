@@ -1,39 +1,43 @@
-import {Token} from "./token.js";
+import { Token } from './token.js';
 
-const keywordRegex = /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)(?![A-Za-z0-9$_])/
+/* eslint-disable */
+const keywordRegex = /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)(?![A-Za-z0-9$_])/;
 const filteredTypes = [
-  "end-of-line", "whitespace", "semicolon", "undefined"
+  'end-of-line', 'whitespace', 'semicolon', 'undefined'
 ];
 
 export const tokenTypes = new Map([
-  ["comment", /^\/\/.+/],
-  ["multiline-comment", /^\/\*.*?\*\//s],
-  ["regex-operator", /^\/.*?(?<!\\)\/[dgimsuy]*/s],
-  ["arithmetic-operator", /^(\+\+|--|\*\*(?!=)|[+\-\/*%](?![=\-+*]))/],
-  ["logical-operator", /^(\|\||&&|!)(?!=)/],
-  ["dot-operator", /^\./],
-  ["comma-operator", /^,/],
-  ["semicolon", /^;/],
-  ["whitespace", /^ +/],
-  ["assignment-operator", /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/],
-  ["logical-operator", /^(\|\||&&|!)(?!=)/],
-  ["comparing-operator", /^((?<!=)[<>](?![=<>])|==(?!=)|<=|>=|===|!=|!==)/],
-  ["nullish-operator", /^\?\?(?!=)/],
-  ["opening-brace", /^{/],
-  ["closing-brace", /^}/],
-  ["opening-bracket", /^\[/],
-  ["closing-bracket", /^]/],
-  ["question-mark", /^\?/],
-  ["colon", /^:/],
-  ["bitwise-operator", /^(&(?!&)|\|(?!\|)|\^|<<|>>|>>>|~)(?!=)/],
-  ["opening-parenthesis", /^\(/],
-  ["closing-parenthesis", /^\)/],
-  ["arrow-operator", /^=>/],
-  ["string", /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
-  ["end-of-line", /^(\r\n|\n)/],
-  ["number", /^\d+/],
-  ["keyword", keywordRegex],
-  ["identifier", /^[a-zA-Z_$][a-zA-Z_$0-9]*/]
+  ['comment', /^\/\/.+/],
+  ['multiline-comment', /^\/\*.*?\*\//s],
+  ['semicolon', /^;/],
+  ['whitespace', /^ +/],
+  ['end-of-line', /^(\r\n|\n)/],
+  ['regex', /^\/.*?(?<!\\)\/[dgimsuy]*/s],
+
+  ['arithmetic-operator', /^(\+\+|--|\*\*(?!=)|[+\-\/*%](?![=\-+*]))/],
+  ['logical-operator', /^(\|\||&&|!)(?!=)/],
+  ['dot-operator', /^\./],
+  ['comma-operator', /^,/],
+  ['assignment-operator', /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/],
+  ['logical-operator', /^(\|\||&&|!)(?!=)/],
+  ['comparing-operator', /^((?<!=)[<>](?![=<>])|==(?!=)|<=|>=|===|!=|!==)/],
+  ['nullish-operator', /^\?\?(?!=)/],
+  ['question-mark-operator', /^\?/],
+  ['colon-operator', /^:/],
+  ['bitwise-operator', /^(&(?!&)|\|(?!\|)|\^|<<|>>|>>>|~)(?!=)/],
+  ['arrow-operator', /^=>/],
+
+  ['opening-brace', /^{/],
+  ['closing-brace', /^}/],
+  ['opening-bracket', /^\[/],
+  ['closing-bracket', /^]/],
+  ['opening-parenthesis', /^\(/],
+  ['closing-parenthesis', /^\)/],
+
+  ['string', /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
+  ['number', /^\d+/],
+  ['keyword', keywordRegex],
+  ['identifier', /^[a-zA-Z_$][a-zA-Z_$0-9]*/]
 ]);
 
 export class Tokenizer {
@@ -50,8 +54,8 @@ export class Tokenizer {
     this.checkingText = text;
   }
 
-  tokenize(){
-    while (this.checkingText !== "") {
+  tokenize() {
+    while (this.checkingText !== '') {
       this.createToken();
       this.currentToken.index = this.allTokens.length + 1;
       this.allTokens.push(this.currentToken);
@@ -62,18 +66,18 @@ export class Tokenizer {
 
   updateRowAndCol(amount = 1) {
     switch (this.currentToken.type) {
-      case "end-of-line": {
-        this.currentRow++;
-        this.currentCol = 1;
-        break;
-      }
-      case "multiline-comment": {
-        this.currentRow += this.currentToken.value.split("\n").length - 1
-        this.currentCol = 1;
-        break;
-      }
-      default:
-        this.currentCol += amount;
+    case 'end-of-line': {
+      this.currentRow++;
+      this.currentCol = 1;
+      break;
+    }
+    case 'multiline-comment': {
+      this.currentRow += this.currentToken.value.split('\n').length - 1;
+      this.currentCol = 1;
+      break;
+    }
+    default:
+      this.currentCol += amount;
     }
   }
 
@@ -84,7 +88,6 @@ export class Tokenizer {
       const res = this.createTypeToken(type, reg);
       if (res) break;
     }
-
   }
 
   createTypeToken(type, reg) {
