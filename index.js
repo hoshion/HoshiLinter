@@ -1,18 +1,25 @@
-import {Tokenizer} from "./tokenizer.js";
-import fs from "fs"
+import { Tokenizer } from './tokenizer.js';
+import fs from 'fs';
+import { execSync } from 'child_process';
+import { Parser } from './parser.js';
 
-String.prototype.matches = function (regexp) {
-  const matches = this.match(regexp);
-  if (matches == null) return false;
-  return matches[0] === String(this);
+const fileName = (process.argv[2] && process.argv[2] !== '--fullLog') ? process.argv[2] : 'test.js';
+const fullLog = process.argv.includes('--fullLog');
+
+const file = fs.readFileSync(`./${fileName}`, 'utf8');
+
+try {
+  execSync(`node --check ${fileName}`, { encoding: 'utf8', stdio: 'pipe' });
+} catch (e) {
+  console.log('Before executing the linter please fix syntax errors:\n' + e.stderr);
+  process.exit();
 }
 
-const fileName = (process.argv[2] && process.argv[2] !== "--fullLog") ? process.argv[2] : "test.js";
-const fullLog = process.argv.includes("--fullLog");
-
-
-const file = fs.readFileSync(`./${fileName}`).toString();
 const tokenizer = new Tokenizer(file);
 
 tokenizer.tokenize();
-tokenizer.log(fullLog);
+
+const parser = new Parser(tokenizer);
+
+parser.parse();
+parser.log();

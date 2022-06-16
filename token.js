@@ -4,8 +4,9 @@ export class Token {
   type;
   value;
   length;
+  index;
 
-  constructor(row, col, type = "undefined", value = "null") {
+  constructor(row, col, type = 'undefined', value = 'null') {
     this.row = row;
     this.col = col;
     this.type = type;

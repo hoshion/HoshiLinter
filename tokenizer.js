@@ -1,48 +1,50 @@
-import {Token} from "./token.js";
+import { Token } from './token.js';
 
-const keywordRegex = /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)/
+/* eslint-disable */
+const keywordRegex = /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)(?![A-Za-z0-9$_])/;
 const filteredTypes = [
-  "end-of-line", "whitespace", "semicolon", "undefined"
+  'end-of-line', 'whitespace', 'semicolon', 'undefined'
 ];
 
-const tokenTypes = new Map([
-  ["comment", /^\/\/.+/],
-  ["multiline-comment", /^\/\*.*?\*\//s],
-  ["regex-operator", /^\/.*?(?<!\\)\/[dgimsuy]*/s],
-  ["arithmetic-operator", /^(\+\+|--|\*\*(?!=)|[+\-\/*%](?![=\-+*]))/],
-  ["logical-operator", /^(\|\||&&|!)(?!=)/],
-  ["dot-operator", /^\./],
-  ["comma-operator", /^,/],
-  ["semicolon", /^;/],
-  ["whitespace", /^ +/],
-  ["assignment-operator", /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/],
-  ["logical-operator", /^(\|\||&&|!)(?!=)/],
-  ["comparing-operator", /^((?<!=)[<>](?![=<>])|<=|>=|===|!=|!==)/],
-  ["nullish-operator", /^\?\?(?!=)/],
-  ["opening-brace", /^{/],
-  ["closing-brace", /^}/],
-  ["opening-bracket", /^\[/],
-  ["closing-bracket", /^]/],
-  ["question-mark", /^\?/],
-  ["colon", /^:/],
-  ["bitwise-operator", /^(&(?!&)|\|(?!\|)|\^|<<|>>|>>>|~)(?!=)/],
-  ["opening-parenthesis", /^\(/],
-  ["closing-parenthesis", /^\)/],
-  ["arrow-operator", /^=>/],
-  ["string", /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
-  ["end-of-line", /^(\r\n|\n)/],
-  ["number", /^\d+/],
-  ["keyword", keywordRegex],
-  ["variable", /^[a-zA-Z_$][a-zA-Z_$0-9]*/]
-])
+export const tokenTypes = new Map([
+  ['comment', /^\/\/.+/],
+  ['multiline-comment', /^\/\*.*?\*\//s],
+  ['semicolon', /^;/],
+  ['whitespace', /^ +/],
+  ['end-of-line', /^(\r\n|\n)/],
+  ['regex', /^\/.*?(?<!\\)\/[dgimsuy]*/s],
+
+  ['arithmetic-operator', /^(\+\+|--|\*\*(?!=)|[+\-\/*%](?![=\-+*]))/],
+  ['logical-operator', /^(\|\||&&|!)(?!=)/],
+  ['dot-operator', /^\./],
+  ['comma-operator', /^,/],
+  ['assignment-operator', /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/],
+  ['logical-operator', /^(\|\||&&|!)(?!=)/],
+  ['comparing-operator', /^((?<!=)[<>](?![=<>])|==(?!=)|<=|>=|===|!=|!==)/],
+  ['nullish-operator', /^\?\?(?!=)/],
+  ['question-mark-operator', /^\?/],
+  ['colon-operator', /^:/],
+  ['bitwise-operator', /^(&(?!&)|\|(?!\|)|\^|<<|>>|>>>|~)(?!=)/],
+  ['arrow-operator', /^=>/],
+
+  ['opening-brace', /^{/],
+  ['closing-brace', /^}/],
+  ['opening-bracket', /^\[/],
+  ['closing-bracket', /^]/],
+  ['opening-parenthesis', /^\(/],
+  ['closing-parenthesis', /^\)/],
+
+  ['string', /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
+  ['number', /^\d+/],
+  ['keyword', keywordRegex],
+  ['identifier', /^[a-zA-Z_$][a-zA-Z_$0-9]*/]
+]);
 
 export class Tokenizer {
   text;
   checkingText;
   currentRow = 1;
   currentCol = 1;
-  currentSymbolIndex = 0;
-  currentSymbol;
   currentToken;
   filteredTokens = [];
   allTokens = [];
@@ -52,10 +54,10 @@ export class Tokenizer {
     this.checkingText = text;
   }
 
-  tokenize(){
-    this.currentSymbol = this.text[this.currentSymbolIndex];
-    while (this.currentSymbol !== null && this.currentSymbol !== undefined) {
+  tokenize() {
+    while (this.checkingText !== '') {
       this.createToken();
+      this.currentToken.index = this.allTokens.length + 1;
       this.allTokens.push(this.currentToken);
       if (!filteredTypes.includes(this.currentToken.type)) this.filteredTokens.push(this.currentToken);
       this.next(this.currentToken.value.length);
@@ -64,18 +66,18 @@ export class Tokenizer {
 
   updateRowAndCol(amount = 1) {
     switch (this.currentToken.type) {
-      case "end-of-line": {
-        this.currentRow++;
-        this.currentCol = 1;
-        break;
-      }
-      case "multiline-comment": {
-        this.currentRow += this.currentToken.value.split("\n").length - 1
-        this.currentCol = 1;
-        break;
-      }
-      default:
-        this.currentCol += amount;
+    case 'end-of-line': {
+      this.currentRow++;
+      this.currentCol = 1;
+      break;
+    }
+    case 'multiline-comment': {
+      this.currentRow += this.currentToken.value.split('\n').length - 1;
+      this.currentCol = 1;
+      break;
+    }
+    default:
+      this.currentCol += amount;
     }
   }
 
@@ -86,7 +88,6 @@ export class Tokenizer {
       const res = this.createTypeToken(type, reg);
       if (res) break;
     }
-
   }
 
   createTypeToken(type, reg) {
@@ -99,11 +100,8 @@ export class Tokenizer {
   }
 
   next(amount = 1) {
-    this.currentSymbolIndex += amount;
-    this.currentSymbol = this.text[this.currentSymbolIndex];
     this.updateRowAndCol(amount);
     this.checkingText = this.checkingText.slice(amount);
-    return this.currentSymbol;
   }
 
   log(fullLog = false) {
