@@ -1,8 +1,8 @@
 import { Statement } from './statement.js';
-import { ExpressionParser } from './expression-parser.js';
-import { bracketsMap, Utils } from './utils.js';
-import { ScopeParser } from './scope-parser.js';
-import {statementKeywordsList} from "./parser.js";
+import { ExpressionParser } from '../expression-parser/expression-parser.js';
+import { bracketsMap, Utils } from '../../utils/utils.js';
+import { ScopeParser } from '../scope-parser/scope-parser.js';
+import {statementKeywordsList} from "../parser.js";
 
 const statementStructures = new Map([
   ['if', ['(', 'expression', ')', 'scope', ['?', 'else', 'scope']]],

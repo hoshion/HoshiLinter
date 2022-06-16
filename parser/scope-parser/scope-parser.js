@@ -1,8 +1,8 @@
-import { Utils } from './utils.js';
-import { statementKeywordsList } from './parser.js';
-import { ExpressionParser } from './expression-parser.js';
+import { Utils } from '../../utils/utils.js';
+import { statementKeywordsList } from '../parser.js';
+import { ExpressionParser } from '../expression-parser/expression-parser.js';
 import { Scope } from './scope.js';
-import { StatementParser } from './statement-parser.js';
+import { StatementParser } from '../statement-parser/statement-parser.js';
 
 export class ScopeParser {
   static counter = 0;

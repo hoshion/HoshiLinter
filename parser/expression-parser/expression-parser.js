@@ -1,7 +1,7 @@
 import { Expression } from './expression.js';
-import { brackets, bracketsMap, Utils } from './utils.js';
-import { StatementParser } from './statement-parser.js';
-import { ScopeParser } from './scope-parser.js';
+import { brackets, bracketsMap, Utils } from '../../utils/utils.js';
+import { StatementParser } from '../statement-parser/statement-parser.js';
+import { ScopeParser } from '../scope-parser/scope-parser.js';
 
 export class ExpressionParser {
   static counter = 0;
