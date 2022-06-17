@@ -11,4 +11,7 @@ export const Symbols = {
   SPACE: ' ',
   COMMA: ',',
   PLUS: '+',
+  OPENING_ANGLE: '<',
+  CLOSING_ANGLE: '>',
+  NOTHING: '',
 }
