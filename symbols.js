@@ -10,4 +10,5 @@ export const Symbols = {
   CLOSING_BRACKET: ']',
   SPACE: ' ',
   COMMA: ',',
+  PLUS: '+',
 }
