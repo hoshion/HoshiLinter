@@ -39,4 +39,15 @@ export class Utils {
     }
     return filteredTokens.length;
   }
+
+  static plane(parts) {
+    const res = [];
+    for (const part of parts) {
+      if (part.parts) res.push(...this.plane(part.parts));
+      else {
+        res.push(part);
+      }
+    }
+    return res;
+  }
 }
