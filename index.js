@@ -2,6 +2,7 @@ import { Tokenizer } from './tokenizer/tokenizer.js';
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Parser } from './parser/parser.js';
+import { Linter } from './linter/linter.js';
 
 const fileName = (process.argv[2] && process.argv[2] !== '--fullLog') ? process.argv[2] : 'test.js';
 const fullLog = process.argv.includes('--fullLog');
@@ -22,4 +23,7 @@ tokenizer.tokenize();
 const parser = new Parser(tokenizer);
 
 parser.parse();
-parser.log();
+
+const linter = new Linter(parser.parts, fileName);
+
+linter.lint();
