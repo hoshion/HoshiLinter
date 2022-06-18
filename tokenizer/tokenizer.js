@@ -1,4 +1,5 @@
 import { Token } from './token.js';
+import { Symbols } from '../symbols.js';
 
 /* eslint-disable */
 const keywordRegex = /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)(?![A-Za-z0-9$_])/;
@@ -6,7 +7,7 @@ const filteredTypes = [
   'end-of-line', 'whitespace', 'semicolon', 'undefined'
 ];
 
-export const tokenTypes = new Map([
+const TOKEN_TYPES = new Map([
   ['comment', /^\/\/.+/],
   ['multiline-comment', /^\/\*.*?\*\//s],
   ['semicolon', /^;/],
@@ -55,7 +56,7 @@ export class Tokenizer {
   }
 
   tokenize() {
-    while (this.checkingText !== '') {
+    while (this.checkingText !== Symbols.NOTHING) {
       this.createToken();
       this.currentToken.index = this.allTokens.length + 1;
       this.allTokens.push(this.currentToken);
@@ -72,7 +73,7 @@ export class Tokenizer {
       break;
     }
     case 'multiline-comment': {
-      this.currentRow += this.currentToken.value.split('\n').length - 1;
+      this.currentRow += this.currentToken.value.split(Symbols.NEW_LINE).length - 1;
       this.currentCol = 1;
       break;
     }
@@ -84,7 +85,7 @@ export class Tokenizer {
   createToken() {
     this.currentToken = new Token(this.currentRow, this.currentCol);
 
-    for (const [type, reg] of tokenTypes) {
+    for (const [type, reg] of TOKEN_TYPES) {
       const res = this.createTypeToken(type, reg);
       if (res) break;
     }
