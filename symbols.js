@@ -13,5 +13,6 @@ export const Symbols = {
   PLUS: '+',
   OPENING_ANGLE: '<',
   CLOSING_ANGLE: '>',
-  NOTHING: '',
-}
+  LAMBDA: '=>',
+  NOTHING: ''
+};
