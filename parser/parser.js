@@ -1,6 +1,7 @@
 import { StatementParser } from './statement-parser/statement-parser.js';
 import { ScopeParser } from './scope-parser/scope-parser.js';
 import { ExpressionParser } from './expression-parser/expression-parser.js';
+import { Symbols } from '../symbols';
 
 export const statementKeywordsList = [
   'if', 'for', 'do', 'class', 'while', 'throw',
@@ -49,7 +50,7 @@ export class Parser {
   parseToken(owner) {
     if (statementKeywordsList.includes(this.currentToken.value)) {
       new StatementParser(owner, this, this.currentToken).parse();
-    } else if (this.currentToken.value === '{') {
+    } else if (this.currentToken.value === Symbols.OPENING_BRACE) {
       new ScopeParser(owner, this).parse();
     } else {
       new ExpressionParser(owner, this).parse();
@@ -57,7 +58,7 @@ export class Parser {
   }
 
   log() {
-    console.dir(this.parts, { depth: null })
+    console.dir(this.parts, { depth: null });
   }
 
   previous() {
