@@ -1,5 +1,5 @@
 import { Expression } from './expression.js';
-import { brackets, bracketsMap, Utils } from '../../utils/utils.js';
+import { BRACKETS, BRACKETS_MAP, Utils } from '../../utils/utils.js';
 import { StatementParser } from '../statement-parser/statement-parser.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';
 import { Symbols } from '../../symbols.js';
@@ -72,8 +72,8 @@ export class ExpressionParser {
   }
 
   checkBracket(token) {
-    if (brackets.includes(token.value)) {
-      if (bracketsMap.has(token.value)) this.bracketsCounter++;
+    if (BRACKETS.includes(token.value)) {
+      if (BRACKETS_MAP.has(token.value)) this.bracketsCounter++;
       else this.bracketsCounter--;
     }
     return this.bracketsCounter < 0;
@@ -82,7 +82,7 @@ export class ExpressionParser {
   checkEndOfLine(token, previous) {
     if (token.row !== previous.row) {
       return !(token.type.endsWith('operator') || previous.type.endsWith('operator') ||
-        brackets.includes(token.value) || brackets.includes(previous.value));
+        BRACKETS.includes(token.value) || BRACKETS.includes(previous.value));
     } else { return false; }
   }
 

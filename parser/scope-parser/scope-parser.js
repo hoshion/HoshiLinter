@@ -1,5 +1,5 @@
 import { Utils } from '../../utils/utils.js';
-import { statementKeywordsList } from '../parser.js';
+import { STATEMENT_KEYWORD_LIST } from '../parser.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';
 import { Scope } from './scope.js';
 import { StatementParser } from '../statement-parser/statement-parser.js';
@@ -33,7 +33,7 @@ export class ScopeParser {
       this.parseArray(searchingArray);
 
       this.scope.parts.push(closingBracket);
-    } else if (statementKeywordsList.includes(curToken.value)) {
+    } else if (STATEMENT_KEYWORD_LIST.includes(curToken.value)) {
       new StatementParser(this.scope, this.parser, curToken).parse();
     } else {
       new ExpressionParser(this.scope, this.parser).parse();

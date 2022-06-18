@@ -1,4 +1,4 @@
-import { statementKeywordsList } from '../parser/parser.js';
+import { STATEMENT_KEYWORD_LIST } from '../parser/parser.js';
 import { Symbols } from '../symbols.js';
 import { Utils } from '../utils/utils.js';
 
@@ -42,7 +42,7 @@ export class StatementLinter {
   }
 
   lintToken(token) {
-    return token.value + (statementKeywordsList.includes(token.value) ?
+    return token.value + (STATEMENT_KEYWORD_LIST.includes(token.value) ?
       Symbols.SPACE :
       Symbols.NOTHING
     );

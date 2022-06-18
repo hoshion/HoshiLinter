@@ -1,10 +1,10 @@
-export const bracketsMap = new Map([
+export const BRACKETS_MAP = new Map([
   ['[', ']'],
   ['{', '}'],
   ['(', ')'],
   ['<', '>']
 ]);
-export const brackets = ['[', ']', '{', '}', '(', ')', '<', '>'];
+export const BRACKETS = ['[', ']', '{', '}', '(', ')', '<', '>'];
 
 export class Utils {
   static findClosingBracket(opening, tokens) {
@@ -14,7 +14,7 @@ export class Utils {
     let closing;
     for (closing of array) {
       if (closing.value === opening.value) counter++;
-      if (closing.value === bracketsMap.get(opening.value)) counter--;
+      if (closing.value === BRACKETS_MAP.get(opening.value)) counter--;
       if (counter === 0) break;
     }
 

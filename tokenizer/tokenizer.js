@@ -7,7 +7,7 @@ const filteredTypes = [
   'end-of-line', 'whitespace', 'semicolon', 'undefined'
 ];
 
-export const tokenTypes = new Map([
+const TOKEN_TYPES = new Map([
   ['comment', /^\/\/.+/],
   ['multiline-comment', /^\/\*.*?\*\//s],
   ['semicolon', /^;/],
@@ -85,7 +85,7 @@ export class Tokenizer {
   createToken() {
     this.currentToken = new Token(this.currentRow, this.currentCol);
 
-    for (const [type, reg] of tokenTypes) {
+    for (const [type, reg] of TOKEN_TYPES) {
       const res = this.createTypeToken(type, reg);
       if (res) break;
     }

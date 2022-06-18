@@ -3,7 +3,7 @@ import { ScopeParser } from './scope-parser/scope-parser.js';
 import { ExpressionParser } from './expression-parser/expression-parser.js';
 import { Symbols } from '../symbols';
 
-export const statementKeywordsList = [
+export const STATEMENT_KEYWORD_LIST = [
   'if', 'for', 'do', 'class', 'while', 'throw',
   'switch', 'function', 'var', 'let', 'const',
   'import', 'export', 'try'
@@ -48,7 +48,7 @@ export class Parser {
   }
 
   parseToken(owner) {
-    if (statementKeywordsList.includes(this.currentToken.value)) {
+    if (STATEMENT_KEYWORD_LIST.includes(this.currentToken.value)) {
       new StatementParser(owner, this, this.currentToken).parse();
     } else if (this.currentToken.value === Symbols.OPENING_BRACE) {
       new ScopeParser(owner, this).parse();

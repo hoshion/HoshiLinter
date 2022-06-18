@@ -1,11 +1,11 @@
 import { Statement } from './statement.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';
-import { bracketsMap, Utils } from '../../utils/utils.js';
+import { BRACKETS_MAP, Utils } from '../../utils/utils.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';
-import { statementKeywordsList } from '../parser.js';
+import { STATEMENT_KEYWORD_LIST } from '../parser.js';
 import { Symbols } from '../../symbols.js';
 
-const statementStructures = new Map([
+const STATEMENTS_STRUCTURES = new Map([
   ['if', ['(', 'expression', ')', 'scope', ['?', 'else', 'scope']]],
   ['for', ['(', 'expression', ['?', 'expression', 'expression'], ')', 'scope']],
   ['function', ['identifier', '(', 'expression', ')', 'scope']],
@@ -34,7 +34,7 @@ export class StatementParser {
     this.owner = owner;
     this.parser = parser;
     this.keywordToken = keywordToken;
-    this.structure = statementStructures.get(keywordToken.value);
+    this.structure = STATEMENTS_STRUCTURES.get(keywordToken.value);
   }
 
   parse() {
@@ -55,7 +55,7 @@ export class StatementParser {
         this.checkStructure(ruleArray);
       } else if (ruleArray[0] === 'expression') {
         if (
-          statementKeywordsList.includes(curValue) ||
+          STATEMENT_KEYWORD_LIST.includes(curValue) ||
           curValue === Symbols.OPENING_BRACE ||
           curValue === Symbols.CLOSING_EMPHASISE
         ) return;
@@ -92,7 +92,7 @@ export class StatementParser {
   }
 
   setClosingBracket(element) {
-    if (bracketsMap.has(element)) {
+    if (BRACKETS_MAP.has(element)) {
       this.possibleBorder = Utils.findClosingBracket(this.parser.currentToken, this.parser.tokenizer.filteredTokens);
     }
   }
