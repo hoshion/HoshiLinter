@@ -2,6 +2,7 @@ import { Expression } from './expression.js';
 import { brackets, bracketsMap, Utils } from '../../utils/utils.js';
 import { StatementParser } from '../statement-parser/statement-parser.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';
+import { Symbols } from '../../symbols.js';
 
 export class ExpressionParser {
   static counter = 0;
@@ -35,22 +36,32 @@ export class ExpressionParser {
       case 'function':
         new StatementParser(expression, this.parser, 'function').parse();
         break label;
-      case '{':
+      case Symbols.OPENING_BRACE:
         if (this.isScope(previousToken, token)) new ScopeParser(expression, this.parser).parse();
         else expression.parts.push(token);
+        console.log(this.parser.currentToken);
         break label;
-      case '=>':
+      case Symbols.LAMBDA:
         this.parser.next();
+        expression.parts.push(token);
         new ScopeParser(expression, this.parser).parse();
-        expression.parts.push(token);
+        this.parser.next();
+        if (this.parser.currentToken.value === Symbols.CLOSING_EMPHASISE) {
+          expression.parts.push(this.parser.currentToken);
+        } else if (this.parser.currentToken.value === Symbols.COMMA) {
+          break;
+        }
         break label;
-      default:
-        expression.parts.push(token);
       }
+      i = tokens.indexOf(this.parser.currentToken);
+      token = tokens[i];
+
+      expression.parts.push(token);
 
       const nextToken = tokens[i + 1] === undefined ? this.parser.getNext() : tokens[i + 1];
+      if (!nextToken) break;
 
-      if (nextToken.type === 'semicolon') break;
+      if (nextToken.value === Symbols.SEMICOLON) break;
       if (!this.isScope(token, nextToken) && this.checkBracket(nextToken)) break;
       if (this.checkEndOfLine(nextToken, token)) break;
 
@@ -76,6 +87,6 @@ export class ExpressionParser {
   }
 
   isScope(leftBracket, rightBracket) {
-    return leftBracket.value === ")" && rightBracket.value === "{";
+    return leftBracket.value === Symbols.CLOSING_EMPHASISE && rightBracket.value === Symbols.OPENING_BRACE;
   }
 }

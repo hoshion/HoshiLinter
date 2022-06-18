@@ -2,7 +2,8 @@ import { Statement } from './statement.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';
 import { bracketsMap, Utils } from '../../utils/utils.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';
-import {statementKeywordsList} from "../parser.js";
+import { statementKeywordsList } from '../parser.js';
+import { Symbols } from '../../symbols.js';
 
 const statementStructures = new Map([
   ['if', ['(', 'expression', ')', 'scope', ['?', 'else', 'scope']]],
@@ -53,7 +54,11 @@ export class StatementParser {
       if (curValue === ruleArray[0]) {
         this.checkStructure(ruleArray);
       } else if (ruleArray[0] === 'expression') {
-        if (statementKeywordsList.includes(curValue) || curValue === '{' || curValue === ')') return;
+        if (
+          statementKeywordsList.includes(curValue) ||
+          curValue === Symbols.OPENING_BRACE ||
+          curValue === Symbols.CLOSING_EMPHASISE
+        ) return;
         this.checkStructure(ruleArray);
       }
     }
