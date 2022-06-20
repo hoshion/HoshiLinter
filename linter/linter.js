@@ -3,6 +3,7 @@ import fs from 'fs';
 import { ExpressionLinter } from './expression-linter.js';
 import { ScopeLinter } from './scope-linter.js';
 import { StatementLinter } from './statement-linter.js';
+import {Structures} from "../structures.js";
 
 export const TAB = 2;
 
@@ -36,18 +37,25 @@ export class Linter {
   }
 
   isStructure(name) {
-    return name === 'Scope' || name === 'Expression' || name === 'Statement';
+    for (const value of Object.values(Structures)) {
+      if (value === name) return true;
+    }
+
+    return false;
   }
 
   lintStructure(part, parts) {
-    switch (part.constructor.name) {
-    case 'Expression': return new ExpressionLinter(part, parts, this).lint();
-    case 'Scope': return new ScopeLinter(part, parts, this).lint();
-    case 'Statement': return new StatementLinter(part, parts, this).lint();
+    const name = part.constructor.name;
+    if (name === Structures.EXPRESSION) {
+      return new ExpressionLinter(part, parts, this).lint();
+    } else if (name === Structures.SCOPE) {
+      return new ScopeLinter(part, parts, this).lint();
+    } else if (name === Structures.STATEMENT) {
+      return new StatementLinter(part, parts, this).lint();
     }
   }
 
   tab() {
-    return Symbols.SPACE.repeat(this.tabSpace);
+    return Symbols.SPACE.repeat(this.tabSpace >= 0 ? this.tabSpace : 0);
   }
 }

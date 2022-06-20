@@ -5,70 +5,105 @@ import { ScopeParser } from '../scope-parser/scope-parser.js';
 import { Symbols } from '../../symbols.js';
 
 export class ExpressionParser {
-  static counter = 0;
-  index;
-  owner;
   parser;
   startingToken;
+  expression;
   bracketsCounter = 0;
+  searchingArray;
 
-  constructor(owner, parser) {
-    this.owner = owner;
+  constructor(parser) {
     this.parser = parser;
     this.startingToken = this.parser.currentToken;
-    this.index = ExpressionParser.counter++;
   }
 
-  parse() {
-    const tokenizer = this.parser.tokenizer;
-    const searchingArray = Utils.joinTokens(this.parser.getFromCurrentToEnd(), tokenizer.allTokens, 'semicolon');
-    this.owner.parts.push(this.findExpression(searchingArray));
+  parse(owner) {
+    this.searchingArray = Utils.joinTokens(this.parser.getFromCurrentToEnd(), this.parser.tokenizer.allTokens, 'semicolon');
+    this.expression = new Expression();
+    this.findExpression();
+    owner.parts.push(this.expression);
   }
 
-  findExpression(tokens) {
-    const expression = new Expression();
-    let previousToken = tokens[0];
-    label:
-    for (let i = 0; i < tokens.length; i++) {
-      let token = tokens[i];
-
-      switch (token.value) {
-      case 'function':
-        new StatementParser(expression, this.parser, 'function').parse();
-        break label;
-      case Symbols.OPENING_BRACE:
-        if (this.isScope(previousToken, token)) new ScopeParser(expression, this.parser).parse();
-        else expression.parts.push(token);
-        console.log(this.parser.currentToken);
-        break label;
-      case Symbols.LAMBDA:
-        this.parser.next();
-        expression.parts.push(token);
-        new ScopeParser(expression, this.parser).parse();
-        this.parser.next();
-        if (this.parser.currentToken.value === Symbols.CLOSING_EMPHASISE) {
-          expression.parts.push(this.parser.currentToken);
-        } else if (this.parser.currentToken.value === Symbols.COMMA) {
-          break;
-        }
-        break label;
-      }
-      i = tokens.indexOf(this.parser.currentToken);
-      token = tokens[i];
-
-      expression.parts.push(token);
-
-      const nextToken = tokens[i + 1] === undefined ? this.parser.getNext() : tokens[i + 1];
-      if (!nextToken) break;
-
-      if (nextToken.value === Symbols.SEMICOLON) break;
-      if (!this.isScope(token, nextToken) && this.checkBracket(nextToken)) break;
-      if (this.checkEndOfLine(nextToken, token)) break;
-
-      this.parser.next();
-      previousToken = token;
+  findExpression() {
+    for (let i = 0; i < this.searchingArray.length; i++) {
+      if (this.checkToken()) break;
     }
-    return expression;
+  }
+
+  checkToken() {
+    if (this.checkStructure()) return true;
+
+    this.expression.parts.push(this.parser.currentToken);
+
+    if (this.isSemicolonNext() || this.isOutsideBracket() || this.isEndOfLine()) {
+      return true;
+    }
+
+    this.parser.next();
+    return false;
+  }
+
+  isEndOfLine() {
+    return this.checkEndOfLine(this.parser.getNext(), this.parser.currentToken);
+  }
+
+  isOutsideBracket() {
+    return !this.isScope(this.parser.currentToken, this.parser.getNext()) &&
+      this.checkBracket(this.parser.getNext());
+  }
+
+  isSemicolonNext() {
+    const index = this.searchingArray.indexOf(this.parser.currentToken);
+    const nextToken = this.searchingArray[index + 1];
+    return nextToken && nextToken.value === Symbols.SEMICOLON;
+  }
+
+  checkStructure() {
+    const token = this.parser.currentToken;
+
+    if (token.is('function')) {
+      return this.checkFunction();
+    } else if (token.is(Symbols.OPENING_BRACE)) {
+      return this.checkScope();
+    } else if (token.is(Symbols.LAMBDA)) {
+      return this.checkLambda();
+    }
+
+    return false;
+  }
+
+  checkLambda() {
+    this.expression.parts.push(this.parser.currentToken);
+    this.parser.next();
+    return this.getScope();
+  }
+
+  checkScope() {
+    const isScope = this.isScope(this.parser.getPrevious(), this.parser.currentToken);
+    if (isScope) {
+      return this.getScope();
+    } else {
+      return false;
+    }
+  }
+
+  getScope() {
+    new ScopeParser(this.parser).parse(this.expression);
+    const next = this.parser.getNext();
+
+    const isEmphasise = next.is(Symbols.CLOSING_PARENTHESIS);
+    const isComma = next.is(Symbols.COMMA);
+
+    if (isEmphasise || isComma) {
+      this.parser.next();
+      return false;
+    }
+
+    return true;
+  }
+
+  checkFunction() {
+    new StatementParser(this.parser).parse(this.expression);
+    return true;
   }
 
   checkBracket(token) {
@@ -87,6 +122,6 @@ export class ExpressionParser {
   }
 
   isScope(leftBracket, rightBracket) {
-    return leftBracket.value === Symbols.CLOSING_EMPHASISE && rightBracket.value === Symbols.OPENING_BRACE;
+    return leftBracket.value === Symbols.CLOSING_PARENTHESIS && rightBracket.value === Symbols.OPENING_BRACE;
   }
 }

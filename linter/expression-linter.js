@@ -1,11 +1,13 @@
 import { Symbols } from '../symbols.js';
 import { ExpressionSurrounder } from './expression-surrounder.js';
 import { TAB } from './linter.js';
+import {TokenTypes} from "../token-types.js";
+import {Operators} from "../operators.js";
+import {Token} from "../tokenizer/token.js";
 
 const BRACKETS = [
-  [Symbols.OPENING_EMPHASISE, Symbols.CLOSING_EMPHASISE],
+  [Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS],
   [Symbols.OPENING_BRACE, Symbols.CLOSING_BRACE],
-  [Symbols.OPENING_ANGLE, Symbols.CLOSING_ANGLE],
   [Symbols.CLOSING_BRACKET, Symbols.CLOSING_BRACKET]
 ];
 
@@ -14,6 +16,7 @@ export class ExpressionLinter {
   expression;
   structure;
   linter;
+  index;
 
   constructor(expression, structure, linter) {
     this.expression = expression;
@@ -22,67 +25,75 @@ export class ExpressionLinter {
   }
 
   lint() {
-    for (let i = 0; i < this.expression.parts.length; i++) {
-      this.str += this.lintPart(i);
+    for (this.index = 0; this.index < this.expression.parts.length; this.index++) {
+      this.str += this.lintPart();
     }
 
     this.str = new ExpressionSurrounder(this.linter, this.str).surround(this.expression, this.structure);
     return this.str;
   }
 
-  lintPart(index) {
-    const part = this.expression.parts[index];
+  lintPart() {
+    const part = this.expression.parts[this.index];
 
     if (this.linter.isStructure(part.constructor.name)) {
       return this.linter.lintStructure(part, this.expression.parts);
     }
 
-    return this.lintToken(part, index);
+    return this.lintToken(part);
   }
 
-  lintToken(token, index) {
-    switch (token.value) {
-    case Symbols.PLUS:
-      return this.addSpace() + token.value + (
-        this.isNext('string', index) ?
-          Symbols.NOTHING :
-          Symbols.SPACE
-      );
+  lintToken(token) {
+    this.updateTab(token);
 
-    case Symbols.OPENING_BRACE:
+    const strings = this.getStringsMap(token);
+
+    if (strings.has(token.value)) {
+      return strings.get(token.value);
+    } else {
+      return this.checkOtherRules(token);
+    }
+  }
+
+  getStringsMap (token) {
+    return new Map([
+      [Symbols.PLUS, this.addSpace() + token.value + this.addSpaceNotAfter(TokenTypes.STRING)],
+      [Symbols.OPENING_BRACE, Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab()],
+      [Symbols.CLOSING_BRACE, Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE],
+      [Symbols.COMMA, this.isNewLine() ?
+        Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab() :
+        Symbols.COMMA + Symbols.SPACE
+      ],
+      [Symbols.DOT, token.value],
+      [Symbols.EXCLAMATION_MARK, token.value],
+    ])
+  }
+
+  checkOtherRules(token, index) {
+    const value = token.value;
+    if (token.isType(TokenTypes.KEYWORD) || token.isOperator()) {
+      const spaceAfter = this.addSpaceNotAfter(index, Operators.DOT, TokenTypes.CLOSING_PARENTHESIS);
+      return this.addSpace() + value + spaceAfter;
+    } else {
+      return value;
+    }
+  }
+
+  updateTab(token) {
+    if (token.is(Symbols.OPENING_BRACE)) {
       this.linter.tabSpace += TAB;
-      return Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab();
-
-    case Symbols.CLOSING_BRACE:
+    } else if (token.is(Symbols.CLOSING_BRACE)) {
       this.linter.tabSpace -= TAB;
-      return Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE;
-
-    case Symbols.COMMA:
-      if (this.isNewLine()) {
-        return Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab();
-      } else {
-        return Symbols.COMMA + Symbols.SPACE;
-      }
-
-    default: {
-      if (token.type === 'keyword' || (token.type.endsWith('operator') && token.value !== Symbols.DOT)) {
-        return this.addSpace() + token.value + (
-          this.isNext('dot-operator', index) || this.isNext('closing-parenthesis', index) ?
-            Symbols.NOTHING :
-            Symbols.SPACE
-        );
-      } else { return token.value; }
-    }
     }
   }
 
-  isNext(type, index) {
-    return this.expression.parts[index + 1] && this.expression.parts[index + 1]?.type === type;
+  getNext() {
+    return this.expression.parts[this.index + 1];
   }
 
   isNewLine() {
     const indexes = new Map([
-      [Symbols.OPENING_EMPHASISE, 0],
+      [Symbols.OPENING_PARENTHESIS, 0],
       [Symbols.OPENING_BRACE, 0],
       [Symbols.OPENING_BRACKET, 0],
       [Symbols.OPENING_ANGLE, 0]
@@ -118,8 +129,23 @@ export class ExpressionLinter {
   addSpace() {
     if (
       !this.str.endsWith(Symbols.SPACE) &&
-      !this.str.endsWith(Symbols.OPENING_EMPHASISE) &&
+      !this.str.endsWith(Symbols.OPENING_PARENTHESIS) &&
       this.str !== Symbols.NOTHING
     ) { return Symbols.SPACE; } else { return Symbols.NOTHING; }
+  }
+
+  check() {
+    return (type) => {
+      const next = this.getNext();
+      return next && next instanceof Token && next.isType(type);
+    }
+  }
+
+  addSpaceNotAfter(...types) {
+    if (types.some(this.check())) {
+      return Symbols.NOTHING;
+    } else {
+      return Symbols.SPACE;
+    }
   }
 }

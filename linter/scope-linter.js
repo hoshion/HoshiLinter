@@ -1,11 +1,16 @@
 import { Symbols } from '../symbols.js';
 import { TAB } from './linter.js';
+import {Token} from "../tokenizer/token.js";
+import {Keywords} from "../keywords.js";
 
 export class ScopeLinter {
   str = Symbols.NOTHING;
   scope;
   structure;
   linter;
+  isTabbed = true;
+  isNewLinedBefore = true;
+  isBraced = false;
 
   constructor(scope, structure, linter) {
     this.scope = scope;
@@ -14,7 +19,12 @@ export class ScopeLinter {
   }
 
   lint() {
-    this.linter.tabSpace += TAB;
+    if (this.checkPreviousToken(Keywords.ELSE)) {
+      this.isNewLinedBefore = false;
+      this.isTabbed = false;
+    }
+
+    this.addTab();
 
     for (let i = 0; i < this.scope.parts.length; i++) {
       this.str += this.lintPart(i);
@@ -32,27 +42,46 @@ export class ScopeLinter {
       return this.linter.lintStructure(part, this.scope.parts);
     }
 
-    switch (part.value) {
-    case Symbols.OPENING_BRACE:
+    return this.lintToken(part);
+  }
+
+  lintToken(token) {
+    if (token.is(Symbols.OPENING_BRACE)) {
+      this.isBraced = true;
       return Symbols.SPACE + Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab();
-    case Symbols.CLOSING_BRACE:
-      this.linter.tabSpace -= TAB;
+    } else if (token.is(Symbols.CLOSING_BRACE)) {
+      this.removeTab();
       return Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE;
-    default:
+    } else {
       return Symbols.NOTHING;
     }
   }
 
   surround() {
-    if (this.scope.parts[0]?.value !== Symbols.OPENING_BRACE) {
+    if (!this.isBraced && this.isNewLinedBefore) {
       this.str = Symbols.NEW_LINE + this.linter.tab() + this.str;
     }
 
-    const lastIndex = this.scope.parts.length - 1;
+    if (!this.isBraced) {
+      this.removeTab();
+    }
+  }
 
-    if (this.scope.parts[lastIndex]?.value !== Symbols.CLOSING_BRACE) {
+  checkPreviousToken(value) {
+    const index = this.structure.indexOf(this.scope) - 1;
+    const part = this.structure[index];
+    return part && part instanceof Token && part.is(value);
+  }
+
+  addTab() {
+    if (this.isTabbed) {
+      this.linter.tabSpace += TAB;
+    }
+  }
+
+  removeTab() {
+    if (this.isTabbed) {
       this.linter.tabSpace -= TAB;
-      this.str += Symbols.NEW_LINE + this.linter.tab();
     }
   }
 }

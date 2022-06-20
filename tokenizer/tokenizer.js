@@ -1,44 +1,45 @@
 import { Token } from './token.js';
 import { Symbols } from '../symbols.js';
+import {TokenTypes} from "../token-types.js";
+import {Operators} from "../operators.js";
 
 /* eslint-disable */
 const keywordRegex = /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)(?![A-Za-z0-9$_])/;
 const filteredTypes = [
-  'end-of-line', 'whitespace', 'semicolon', 'undefined'
+  TokenTypes.END_OF_LINE, TokenTypes.WHITESPACE, TokenTypes.SEMICOLON, TokenTypes.UNDEFINED
 ];
 
 const TOKEN_TYPES = new Map([
-  ['comment', /^\/\/.+/],
-  ['multiline-comment', /^\/\*.*?\*\//s],
-  ['semicolon', /^;/],
-  ['whitespace', /^ +/],
-  ['end-of-line', /^(\r\n|\n)/],
-  ['regex', /^\/.*?(?<!\\)\/[dgimsuy]*/s],
+  [TokenTypes.COMMENT, /^\/\/.+/],
+  [TokenTypes.MULTILINE_COMMENT, /^\/\*.*?\*\//s],
+  [TokenTypes.SEMICOLON, /^;/],
+  [TokenTypes.WHITESPACE, /^ +/],
+  [TokenTypes.END_OF_LINE, /^(\r\n|\n)/],
+  [TokenTypes.REGEX, /^\/.*?(?<!\\)\/[dgimsuy]*/s],
 
-  ['arithmetic-operator', /^(\+\+|--|\*\*(?!=)|[+\-\/*%](?![=\-+*]))/],
-  ['logical-operator', /^(\|\||&&|!)(?!=)/],
-  ['dot-operator', /^\./],
-  ['comma-operator', /^,/],
-  ['assignment-operator', /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/],
-  ['logical-operator', /^(\|\||&&|!)(?!=)/],
-  ['comparing-operator', /^((?<!=)[<>](?![=<>])|==(?!=)|<=|>=|===|!=|!==)/],
-  ['nullish-operator', /^\?\?(?!=)/],
-  ['question-mark-operator', /^\?/],
-  ['colon-operator', /^:/],
-  ['bitwise-operator', /^(&(?!&)|\|(?!\|)|\^|<<|>>|>>>|~)(?!=)/],
-  ['arrow-operator', /^=>/],
+  [Operators.ARITHMETIC, /^(\+\+|--|\*\*(?!=)|[+\-\/*%](?![=\-+*]))/],
+  [Operators.LOGICAL, /^(\|\||&&|!)(?!=)/],
+  [Operators.DOT, /^\./],
+  [Operators.COMMA, /^,/],
+  [Operators.ASSIGNMENT, /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/],
+  [Operators.COMPARING, /^([><](?![=><])|==(?!=)|<=|>=|===|!=(?!=)|!==)/],
+  [Operators.NULLISH, /^\?\?(?!=)/],
+  [Operators.QUESTION_MARK, /^\?/],
+  [Operators.COLON, /^:/],
+  [Operators.BITWISE, /^(&(?!&)|\|(?!\|)|\^|<<|>>|>>>|~)(?!=)/],
+  [Operators.ARROW, /^=>/],
 
-  ['opening-brace', /^{/],
-  ['closing-brace', /^}/],
-  ['opening-bracket', /^\[/],
-  ['closing-bracket', /^]/],
-  ['opening-parenthesis', /^\(/],
-  ['closing-parenthesis', /^\)/],
+  [TokenTypes.OPENING_BRACE, /^{/],
+  [TokenTypes.CLOSING_BRACE, /^}/],
+  [TokenTypes.OPENING_BRACKET, /^\[/],
+  [TokenTypes.CLOSING_BRACKET, /^]/],
+  [TokenTypes.OPENING_PARENTHESIS, /^\(/],
+  [TokenTypes.CLOSING_PARENTHESIS, /^\)/],
 
-  ['string', /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
-  ['number', /^\d+/],
-  ['keyword', keywordRegex],
-  ['identifier', /^[a-zA-Z_$][a-zA-Z_$0-9]*/]
+  [TokenTypes.STRING, /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
+  [TokenTypes.NUMBER, /^\d+/],
+  [TokenTypes.KEYWORD, keywordRegex],
+  [TokenTypes.IDENTIFIER, /^[a-zA-Z_$][a-zA-Z_$0-9]*/]
 ]);
 
 export class Tokenizer {
@@ -66,18 +67,14 @@ export class Tokenizer {
   }
 
   updateRowAndCol(amount = 1) {
-    switch (this.currentToken.type) {
-    case 'end-of-line': {
+    const token = this.currentToken;
+    if (token.isType(TokenTypes.END_OF_LINE)) {
       this.currentRow++;
       this.currentCol = 1;
-      break;
-    }
-    case 'multiline-comment': {
+    } else if (token.isType(TokenTypes.MULTILINE_COMMENT)) {
       this.currentRow += this.currentToken.value.split(Symbols.NEW_LINE).length - 1;
       this.currentCol = 1;
-      break;
-    }
-    default:
+    } else {
       this.currentCol += amount;
     }
   }

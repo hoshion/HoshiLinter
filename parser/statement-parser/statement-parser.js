@@ -1,65 +1,66 @@
 import { Statement } from './statement.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';
-import { BRACKETS_MAP, Utils } from '../../utils/utils.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';
 import { STATEMENT_KEYWORD_LIST } from '../parser.js';
 import { Symbols } from '../../symbols.js';
+import {Structures} from "../../structures.js";
+import {Keywords} from "../../keywords.js";
+import {TokenTypes} from "../../token-types.js";
 
 const STATEMENTS_STRUCTURES = new Map([
-  ['if', ['(', 'expression', ')', 'scope', ['?', 'else', 'scope']]],
-  ['for', ['(', 'expression', ['?', 'expression', 'expression'], ')', 'scope']],
-  ['function', ['identifier', '(', 'expression', ')', 'scope']],
-  ['do', ['scope', 'while', '(', 'expression', ')']],
-  ['while', ['(', 'expression', ')', 'scope']],
-  ['throw', ['expression']],
-  ['class', ['identifier', 'scope']],
-  ['switch', ['(', 'expression', ')', 'scope']],
-  ['let', ['expression']],
-  ['const', ['expression']],
-  ['var', ['expression']],
-  ['import', ['scope', 'from', 'identifier']],
-  ['export', [['?', 'default'], 'scope']],
-  ['try', ['scope', ['?', 'catch', '(', 'expression', ')', 'scope'], ['?', 'finally', 'scope']]]
+  ['if', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE, [Symbols.QUESTION_MARK, Keywords.ELSE, Structures.SCOPE]]],
+  ['for', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, [Symbols.QUESTION_MARK, Structures.EXPRESSION, Structures.EXPRESSION], Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  ['function', [TokenTypes.IDENTIFIER, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  ['do', [Structures.SCOPE, Keywords.WHILE, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS]],
+  ['while', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  ['throw', [Structures.EXPRESSION]],
+  ['class', [TokenTypes.IDENTIFIER, Structures.SCOPE]],
+  ['switch', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  ['let', [Structures.EXPRESSION]],
+  ['const', [Structures.EXPRESSION]],
+  ['var', [Structures.EXPRESSION]],
+  ['import', [Structures.SCOPE, 'from', TokenTypes.IDENTIFIER]],
+  ['export', [[Symbols.QUESTION_MARK, 'default'], Structures.SCOPE]],
+  ['try', [Structures.SCOPE, [Symbols.QUESTION_MARK, 'catch', Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE], [Symbols.QUESTION_MARK, 'finally', Structures.SCOPE]]]
 ]);
 
 export class StatementParser {
-  owner;
   parser;
   keywordToken;
   structure;
   statement;
-  possibleBorder;
 
-  constructor(owner, parser, keywordToken) {
-    this.owner = owner;
+  constructor(parser) {
     this.parser = parser;
-    this.keywordToken = keywordToken;
-    this.structure = STATEMENTS_STRUCTURES.get(keywordToken.value);
+    this.keywordToken = this.parser.currentToken;
+    this.structure = STATEMENTS_STRUCTURES.get(this.keywordToken.value);
   }
 
-  parse() {
+  parse(owner) {
     this.statement = new Statement(this.keywordToken.value);
     this.statement.parts.push(this.keywordToken);
 
     this.parser.next();
     this.checkStructure(this.structure);
-    this.owner.parts.push(this.statement);
+    owner.parts.push(this.statement);
   }
 
   checkRule(ruleArray) {
+
     const rule = ruleArray.shift();
     const curValue = this.parser.currentToken.value;
-    switch (rule) {
-    case '?':
+    if (rule === Symbols.QUESTION_MARK) {
       if (curValue === ruleArray[0]) {
         this.checkStructure(ruleArray);
-      } else if (ruleArray[0] === 'expression') {
+        this.parser.next();
+      } else if (ruleArray[0] === Structures.EXPRESSION) {
         if (
           STATEMENT_KEYWORD_LIST.includes(curValue) ||
           curValue === Symbols.OPENING_BRACE ||
-          curValue === Symbols.CLOSING_EMPHASISE
+          curValue === Symbols.CLOSING_PARENTHESIS
         ) return;
         this.checkStructure(ruleArray);
+        this.parser.next();
       }
     }
   }
@@ -67,7 +68,7 @@ export class StatementParser {
   checkStructure(structure) {
     for (const element of structure) {
       if (element instanceof Array) {
-        this.checkRule(element);
+        this.checkRule(Array.from(element));
         continue;
       }
 
@@ -75,25 +76,18 @@ export class StatementParser {
       this.parser.next();
     }
     this.parser.previous();
+    console.log(this.parser.currentToken);
   }
 
   checkElement(element) {
-    switch (element) {
-    case 'expression': new ExpressionParser(this.statement, this.parser).parse(); break;
-    case 'scope': new ScopeParser(this.statement, this.parser).parse(); break;
-    case 'token': this.statement.parts.push(this.parser.currentToken); break;
-    default: {
-      const value = this.parser.currentToken.value;
-      if (element === value || element === 'identifier') this.statement.parts.push(this.parser.currentToken);
-    }
-    }
+    const value = this.parser.currentToken.value;
 
-    this.setClosingBracket(element);
-  }
-
-  setClosingBracket(element) {
-    if (BRACKETS_MAP.has(element)) {
-      this.possibleBorder = Utils.findClosingBracket(this.parser.currentToken, this.parser.tokenizer.filteredTokens);
+    if (element === Structures.EXPRESSION) {
+      new ExpressionParser(this.parser).parse(this.statement);
+    } else if (element === Structures.SCOPE) {
+      new ScopeParser(this.parser).parse(this.statement);
+    } else if (element === value || element === TokenTypes.IDENTIFIER) {
+      this.statement.parts.push(this.parser.currentToken);
     }
   }
 }

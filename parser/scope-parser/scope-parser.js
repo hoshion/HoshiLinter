@@ -6,19 +6,14 @@ import { StatementParser } from '../statement-parser/statement-parser.js';
 import { Symbols } from '../../symbols.js';
 
 export class ScopeParser {
-  static counter = 0;
-  index;
-  owner;
   parser;
   scope;
 
-  constructor(owner, parser) {
-    this.owner = owner;
+  constructor(parser) {
     this.parser = parser;
-    this.index = ScopeParser.counter++;
   }
 
-  parse() {
+  parse(owner) {
     let searchingArray;
     this.scope = new Scope();
     const tokenizer = this.parser.tokenizer;
@@ -34,12 +29,12 @@ export class ScopeParser {
 
       this.scope.parts.push(closingBracket);
     } else if (STATEMENT_KEYWORD_LIST.includes(curToken.value)) {
-      new StatementParser(this.scope, this.parser, curToken).parse();
+      new StatementParser(this.parser).parse(this.scope);
     } else {
-      new ExpressionParser(this.scope, this.parser).parse();
+      new ExpressionParser(this.parser).parse(this.scope);
     }
 
-    this.owner.parts.push(this.scope);
+    owner.parts.push(this.scope);
   }
 
   parseArray(array) {

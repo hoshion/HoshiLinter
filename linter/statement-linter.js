@@ -1,6 +1,8 @@
-import { STATEMENT_KEYWORD_LIST } from '../parser/parser.js';
 import { Symbols } from '../symbols.js';
 import { Utils } from '../utils/utils.js';
+import {SurrounderUtils} from "./surrounder-utils.js";
+import {Keywords} from "../keywords.js";
+import {TokenTypes} from "../token-types.js";
 
 export class StatementLinter {
   str = Symbols.NOTHING;
@@ -15,7 +17,7 @@ export class StatementLinter {
   }
 
   lint() {
-    if (this.statement.type === 'import') {
+    if (this.statement.type === Keywords.IMPORT) {
       const arr = Utils.plane(this.statement.parts);
       for (const token of arr) {
         this.lintToken(token);
@@ -42,16 +44,22 @@ export class StatementLinter {
   }
 
   lintToken(token) {
-    return token.value + (STATEMENT_KEYWORD_LIST.includes(token.value) ?
+    return this.addSpace() + token.value + (token.isType(TokenTypes.KEYWORD) ?
       Symbols.SPACE :
       Symbols.NOTHING
     );
   }
 
   surround() {
-    if (this.statement.parts[0].value === 'export') this.str = Symbols.NEW_LINE + this.linter.tab() + this.str;
+    SurrounderUtils.setSpaceBetweenStructures(this, this.structure, this.statement);
+    SurrounderUtils.setNewLineIfNext(this, this.structure, this.structure.indexOf(this.statement));
+  }
 
-    // const lastIndex = this.statement.parts.length - 1;
-    this.str += Symbols.NEW_LINE + this.linter.tab();
+  addSpace() {
+    if (
+      !this.str.endsWith(Symbols.SPACE) &&
+      !this.str.endsWith(Symbols.OPENING_PARENTHESIS) &&
+      this.str !== Symbols.NOTHING
+    ) { return Symbols.SPACE; } else { return Symbols.NOTHING; }
   }
 }

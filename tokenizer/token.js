@@ -1,3 +1,5 @@
+import {Operators} from "../operators.js";
+
 export class Token {
   row;
   col;
@@ -12,5 +14,18 @@ export class Token {
     this.type = type;
     this.value = value;
     this.length = 4;
+  }
+
+  is(value) {
+    return this.value === value;
+  }
+
+  isType(type) {
+    return this.type === type;
+  }
+
+  isOperator() {
+    const values = Object.values(Operators);
+    return values.some((value) => value === this.type)
   }
 }
