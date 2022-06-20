@@ -2,8 +2,8 @@ export const Symbols = {
   SEMICOLON: ';',
   NEW_LINE: '\n',
   DOT: '.',
-  OPENING_EMPHASISE: '(',
-  CLOSING_EMPHASISE: ')',
+  OPENING_PARENTHESIS: '(',
+  CLOSING_PARENTHESIS: ')',
   OPENING_BRACE: '{',
   CLOSING_BRACE: '}',
   OPENING_BRACKET: '[',
@@ -14,5 +14,7 @@ export const Symbols = {
   OPENING_ANGLE: '<',
   CLOSING_ANGLE: '>',
   LAMBDA: '=>',
-  NOTHING: ''
+  EXCLAMATION_MARK: '!',
+  QUESTION_MARK: '?',
+  NOTHING: '',
 };
