@@ -1,5 +1,6 @@
+
 export const Structures = {
-  STATEMENT: "Statement",
-  EXPRESSION: "Expression",
-  SCOPE: "Scope",
+  STATEMENT: 'Statement',
+  EXPRESSION: 'Expression',
+  SCOPE: 'Scope'
 };

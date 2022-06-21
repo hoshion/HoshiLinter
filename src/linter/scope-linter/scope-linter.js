@@ -1,7 +1,8 @@
-import { Symbols } from "../../enums/symbols.js";
-import { TAB } from "../linter.js";
-import { Token } from "../../tokenizer/token.js";
-import { Keywords } from "../../enums/keywords.js";
+
+import { Symbols } from '../../enums/symbols.js';
+import { TAB } from '../linter.js';
+import { Token } from '../../tokenizer/token.js';
+import { Keywords } from '../../enums/keywords.js';
 
 export class ScopeLinter {
   str = Symbols.NOTHING;
@@ -85,10 +86,8 @@ export class ScopeLinter {
         Symbols.OPENING_BRACE +
         Symbols.NEW_LINE +
         this.linter.tab();
-    } else {
-      if (this.isNewLinedBefore) {
-        beforeStr = Symbols.NEW_LINE + this.linter.tab();
-      }
+    } else if (this.isNewLinedBefore) {
+      beforeStr = Symbols.NEW_LINE + this.linter.tab();
     }
 
     this.str = beforeStr + this.str;

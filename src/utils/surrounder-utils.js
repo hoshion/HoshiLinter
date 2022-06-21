@@ -1,6 +1,7 @@
-import { Symbols } from "../enums/symbols.js";
-import { Utils } from "./utils.js";
-import { Token } from "../tokenizer/token.js";
+
+import { Symbols } from '../enums/symbols.js';
+import { Utils } from './utils.js';
+import { Token } from '../tokenizer/token.js';
 
 export class SurrounderUtils {
   static setNewLineIfNext(surrounder, structure, index) {

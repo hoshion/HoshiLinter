@@ -1,12 +1,12 @@
-import { Statement } from "./statement.js";
-import { ExpressionParser } from "../expression-parser/expression-parser.js";
-import { ScopeParser } from "../scope-parser/scope-parser.js";
-import { STATEMENT_KEYWORD_LIST } from "../parser.js";
-import { Symbols } from "../../enums/symbols.js";
-import { Structures } from "../../enums/structures.js";
-import { Keywords } from "../../enums/keywords.js";
-import { TokenTypes } from "../../enums/token-types.js";
-import { STATEMENTS_STRUCTURES } from "./statement-structures.js";
+
+import { Statement } from './statement.js';
+import { ExpressionParser } from '../expression-parser/expression-parser.js';
+import { ScopeParser } from '../scope-parser/scope-parser.js';
+import { STATEMENT_KEYWORD_LIST } from '../parser.js';
+import { Symbols } from '../../enums/symbols.js';
+import { Structures } from '../../enums/structures.js';
+import { TokenTypes } from '../../enums/token-types.js';
+import { STATEMENTS_STRUCTURES } from './statement-structures.js';
 
 export class StatementParser {
   parser;

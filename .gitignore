@@ -9,3 +9,4 @@
 /.eslintrc.cjs
 /.prettierignore
 /package-lock.json
+/.prettierrc.json

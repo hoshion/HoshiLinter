@@ -1,6 +1,8 @@
-import { Operators } from "../enums/operators.js";
+
+import { Operators } from '../enums/operators.js';
 
 export class Token {
+  static INDEX = 1;
   row;
   col;
   type;
@@ -8,12 +10,13 @@ export class Token {
   length;
   index;
 
-  constructor(row, col, type = "undefined", value = "null") {
+  constructor(row, col, type = 'undefined', value = 'null') {
     this.row = row;
     this.col = col;
     this.type = type;
     this.value = value;
     this.length = 4;
+    this.index = Token.INDEX++;
   }
 
   is(value) {
@@ -26,6 +29,6 @@ export class Token {
 
   isOperator() {
     const values = Object.values(Operators);
-    return values.some((value) => value === this.type);
+    return values.some(value => value === this.type);
   }
 }

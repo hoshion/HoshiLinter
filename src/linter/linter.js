@@ -1,9 +1,10 @@
-import { Symbols } from "../enums/symbols.js";
-import fs from "fs";
-import { ExpressionLinter } from "./expression-linter/expression-linter.js";
-import { ScopeLinter } from "./scope-linter/scope-linter.js";
-import { StatementLinter } from "./statement-linter/statement-linter.js";
-import { Structures } from "../enums/structures.js";
+
+import { Symbols } from '../enums/symbols.js';
+import fs from 'fs';
+import { ExpressionLinter } from './expression-linter/expression-linter.js';
+import { ScopeLinter } from './scope-linter/scope-linter.js';
+import { StatementLinter } from './statement-linter/statement-linter.js';
+import { Structures } from '../enums/structures.js';
 
 export const TAB = 2;
 
@@ -24,7 +25,7 @@ export class Linter {
     }
 
     fs.writeFile(`./${this.fileName.slice(0, -3)}-linted.js`, str, () => {
-      console.log("Successfully linted");
+      console.log('Successfully linted');
     });
   }
 

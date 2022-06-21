@@ -1,8 +1,9 @@
-import { Symbols } from "../../enums/symbols.js";
-import { Utils } from "../../utils/utils.js";
-import { SurrounderUtils } from "../../utils/surrounder-utils.js";
-import { Keywords } from "../../enums/keywords.js";
-import { TokenTypes } from "../../enums/token-types.js";
+
+import { Symbols } from '../../enums/symbols.js';
+import { Utils } from '../../utils/utils.js';
+import { SurrounderUtils } from '../../utils/surrounder-utils.js';
+import { Keywords } from '../../enums/keywords.js';
+import { TokenTypes } from '../../enums/token-types.js';
 
 export class StatementLinter {
   str = Symbols.NOTHING;
@@ -44,10 +45,13 @@ export class StatementLinter {
   }
 
   lintToken(token) {
-    const spaceAfterToken = token.isType(TokenTypes.KEYWORD)
-      ? Symbols.SPACE
-      : Symbols.NOTHING;
-    return this.addSpace() + token.value + spaceAfterToken;
+    const spaceAfterToken = token.isType(TokenTypes.KEYWORD) ?
+      Symbols.SPACE :
+      Symbols.NOTHING;
+    const spaceBeforeToken = token.is(Symbols.CLOSING_PARENTHESIS) ?
+      Symbols.NOTHING :
+      this.addSpace();
+    return spaceBeforeToken + token.value + spaceAfterToken;
   }
 
   surround() {

@@ -1,4 +1,5 @@
-import { TokenTypes } from "../../enums/token-types.js";
+
+import { TokenTypes } from '../../enums/token-types.js';
 
 export class Statement {
   type;
