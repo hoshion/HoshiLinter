@@ -8,20 +8,37 @@ import {Keywords} from "../../keywords.js";
 import {TokenTypes} from "../../token-types.js";
 
 const STATEMENTS_STRUCTURES = new Map([
-  [Keywords.IF, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE, [Symbols.QUESTION_MARK, Keywords.ELSE, Structures.SCOPE]]],
-  [Keywords.FOR, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, [Symbols.QUESTION_MARK, Structures.EXPRESSION, Structures.EXPRESSION], Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  [Keywords.FUNCTION, [TokenTypes.IDENTIFIER, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  [Keywords.DO, [Structures.SCOPE, Keywords.WHILE, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS]],
-  [Keywords.WHILE, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  [Keywords.THROW, [Structures.EXPRESSION]],
-  [Keywords.CLASS, [TokenTypes.IDENTIFIER, Structures.SCOPE]],
-  [Keywords.SWITCH, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  [Keywords.LET, [Structures.EXPRESSION]],
-  [Keywords.CONST, [Structures.EXPRESSION]],
-  [Keywords.VAR, [Structures.EXPRESSION]],
-  [Keywords.IMPORT, [Structures.SCOPE, Keywords.FROM, TokenTypes.IDENTIFIER]],
-  [Keywords.EXPORT, [[Symbols.QUESTION_MARK, Keywords.DEFAULT], Structures.SCOPE]],
-  [Keywords.TRY, [Structures.SCOPE, [Symbols.QUESTION_MARK, Keywords.CATCH, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE], [Symbols.QUESTION_MARK, Keywords.FINALLY, Structures.SCOPE]]]
+  [Keywords.IF,
+    [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE, [Symbols.QUESTION_MARK, Keywords.ELSE, Structures.SCOPE]]],
+  [Keywords.FOR,
+    [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, [Symbols.QUESTION_MARK, Structures.EXPRESSION, Structures.EXPRESSION], Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.FUNCTION,
+    [TokenTypes.IDENTIFIER, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.DO,
+    [Structures.SCOPE, Keywords.WHILE, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS]],
+  [Keywords.WHILE,
+    [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.THROW,
+    [Structures.EXPRESSION]],
+  [Keywords.CLASS,
+    [TokenTypes.IDENTIFIER, Structures.SCOPE]],
+  [Keywords.SWITCH,
+    [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.LET,
+    [Structures.EXPRESSION]],
+  [Keywords.CONST,
+    [Structures.EXPRESSION]],
+  [Keywords.VAR,
+    [Structures.EXPRESSION]],
+  [Keywords.IMPORT,
+    [Structures.SCOPE, Keywords.FROM, TokenTypes.IDENTIFIER]],
+  [Keywords.EXPORT,
+    [[Symbols.QUESTION_MARK, Keywords.DEFAULT], Structures.SCOPE]],
+  [Keywords.TRY,
+    [Structures.SCOPE,
+      [Symbols.QUESTION_MARK, Keywords.CATCH, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE],
+      [Symbols.QUESTION_MARK, Keywords.FINALLY, Structures.SCOPE]
+    ]]
 ]);
 
 export class StatementParser {
@@ -42,27 +59,34 @@ export class StatementParser {
 
     this.parser.next();
     this.checkStructure(this.structure);
+
     owner.parts.push(this.statement);
   }
 
   checkRule(ruleArray) {
 
     const rule = ruleArray.shift();
-    const curValue = this.parser.currentToken.value;
+    const token = this.parser.currentToken;
     if (rule === Symbols.QUESTION_MARK) {
-      if (curValue === ruleArray[0]) {
-        this.checkStructure(ruleArray);
-        this.parser.next();
-      } else if (ruleArray[0] === Structures.EXPRESSION) {
-        if (
-          STATEMENT_KEYWORD_LIST.includes(curValue) ||
-          curValue === Symbols.OPENING_BRACE ||
-          curValue === Symbols.CLOSING_PARENTHESIS
-        ) return;
-        this.checkStructure(ruleArray);
-        this.parser.next();
-      }
+      this.checkQuestionMark(ruleArray, token);
     }
+  }
+
+  checkQuestionMark(ruleArray, token) {
+    const firstPart = ruleArray[0];
+    const isFirstParts = token.is(firstPart);
+    const isExpression = firstPart === Structures.EXPRESSION && this.isExpression(token.value);
+
+    if (isFirstParts || isExpression) {
+      this.checkStructure(ruleArray);
+      this.parser.next();
+    }
+  }
+
+  isExpression(curValue) {
+    return !STATEMENT_KEYWORD_LIST.includes(curValue) &&
+      curValue !== Symbols.OPENING_BRACE &&
+      curValue !== Symbols.CLOSING_PARENTHESIS
   }
 
   checkStructure(structure) {
@@ -79,13 +103,13 @@ export class StatementParser {
   }
 
   checkElement(element) {
-    const value = this.parser.currentToken.value;
+    const token = this.parser.currentToken;
 
     if (element === Structures.EXPRESSION) {
       new ExpressionParser(this.parser).parse(this.statement);
     } else if (element === Structures.SCOPE) {
       new ScopeParser(this.parser).parse(this.statement);
-    } else if (element === value || element === TokenTypes.IDENTIFIER) {
+    } else if (token.is(element) || element === TokenTypes.IDENTIFIER) {
       this.statement.parts.push(this.parser.currentToken);
     }
   }

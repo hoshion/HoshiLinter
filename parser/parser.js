@@ -24,7 +24,7 @@ export class Parser {
 
   parse() {
     this.currentToken = this.tokenizer.filteredTokens[this.currentTokenId];
-    while (this.tokenizer.filteredTokens[this.currentTokenId]) {
+    while (this.currentToken) {
       this.parseToken(this);
       this.next();
     }
@@ -46,13 +46,15 @@ export class Parser {
 
   getFromCurrentToExact(token) {
     const filteredTokens = this.tokenizer.filteredTokens;
-    return filteredTokens.slice(filteredTokens.indexOf(this.currentToken), filteredTokens.indexOf(token) + 1);
+    const firstIndex = filteredTokens.indexOf(this.currentToken);
+    const lastIndex = filteredTokens.indexOf(token) + 1;
+    return filteredTokens.slice(firstIndex, lastIndex);
   }
 
   parseToken(owner) {
     if (STATEMENT_KEYWORD_LIST.includes(this.currentToken.value)) {
       new StatementParser(this).parse(owner);
-    } else if (this.currentToken.value === Symbols.OPENING_BRACE) {
+    } else if (this.currentToken.is(Symbols.OPENING_BRACE)) {
       new ScopeParser(this).parse(owner);
     } else {
       new ExpressionParser(this).parse(owner);
