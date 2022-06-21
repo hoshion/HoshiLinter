@@ -1,11 +1,8 @@
-import {Expression} from "../parser/expression-parser/expression.js";
-import {Symbols} from "../symbols.js";
-import {Utils} from "../utils/utils.js";
-import {Token} from "../tokenizer/token.js";
+import { Symbols } from "../symbols.js";
+import { Utils } from "../utils/utils.js";
+import { Token } from "../tokenizer/token.js";
 
 export class SurrounderUtils {
-
-
   static setNewLineIfNext(surrounder, structure, index) {
     const next = structure[index + 1];
     if (next && !(next instanceof Token)) {
@@ -19,7 +16,8 @@ export class SurrounderUtils {
     if (prev && !(prev instanceof Token)) {
       const lines = this.getLines(prev, part);
       if (lines > 1) {
-        surrounder.str = this.newLine(lines - 1) + surrounder.linter.tab() + surrounder.str;
+        surrounder.str =
+          this.newLine(lines - 1) + surrounder.linter.tab() + surrounder.str;
       }
     }
   }

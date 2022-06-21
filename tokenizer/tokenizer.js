@@ -1,12 +1,16 @@
-import { Token } from './token.js';
-import { Symbols } from '../symbols.js';
-import {TokenTypes} from "../token-types.js";
-import {Operators} from "../operators.js";
+import { Token } from "./token.js";
+import { Symbols } from "../symbols.js";
+import { TokenTypes } from "../token-types.js";
+import { Operators } from "../operators.js";
 
 /* eslint-disable */
-const keywordRegex = /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)(?![A-Za-z0-9$_])/;
+const keywordRegex =
+  /^(await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|super|switch|static|this|throw|try|true|typeof|var|void|while|with|yield)(?![A-Za-z0-9$_])/;
 const filteredTypes = [
-  TokenTypes.END_OF_LINE, TokenTypes.WHITESPACE, TokenTypes.SEMICOLON, TokenTypes.UNDEFINED
+  TokenTypes.END_OF_LINE,
+  TokenTypes.WHITESPACE,
+  TokenTypes.SEMICOLON,
+  TokenTypes.UNDEFINED,
 ];
 
 const TOKEN_TYPES = new Map([
@@ -21,7 +25,10 @@ const TOKEN_TYPES = new Map([
   [Operators.LOGICAL, /^(\|\||&&|!)(?!=)/],
   [Operators.DOT, /^\./],
   [Operators.COMMA, /^,/],
-  [Operators.ASSIGNMENT, /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/],
+  [
+    Operators.ASSIGNMENT,
+    /^(=(?![=>])|(\+|-|\*|\/|%|\*\*|\?\?|\|\||&&|&|\||\^|<<|>>|>>>)=)/,
+  ],
   [Operators.COMPARING, /^([><](?![=><])|==(?!=)|<=|>=|===|!=(?!=)|!==)/],
   [Operators.NULLISH, /^\?\?(?!=)/],
   [Operators.QUESTION_MARK, /^\?/],
@@ -39,7 +46,7 @@ const TOKEN_TYPES = new Map([
   [TokenTypes.STRING, /^('.*?(?<!\\)'|".*?(?<!\\)"|`.*?(?<!\\)`)/s],
   [TokenTypes.NUMBER, /^\d+/],
   [TokenTypes.KEYWORD, keywordRegex],
-  [TokenTypes.IDENTIFIER, /^[a-zA-Z_$][a-zA-Z_$0-9]*/]
+  [TokenTypes.IDENTIFIER, /^[a-zA-Z_$][a-zA-Z_$0-9]*/],
 ]);
 
 export class Tokenizer {
@@ -61,7 +68,8 @@ export class Tokenizer {
       this.createToken();
       this.currentToken.index = this.allTokens.length + 1;
       this.allTokens.push(this.currentToken);
-      if (!filteredTypes.includes(this.currentToken.type)) this.filteredTokens.push(this.currentToken);
+      if (!filteredTypes.includes(this.currentToken.type))
+        this.filteredTokens.push(this.currentToken);
       this.next(this.currentToken.value.length);
     }
   }
@@ -72,7 +80,8 @@ export class Tokenizer {
       this.currentRow++;
       this.currentCol = 1;
     } else if (token.isType(TokenTypes.MULTILINE_COMMENT)) {
-      this.currentRow += this.currentToken.value.split(Symbols.NEW_LINE).length - 1;
+      this.currentRow +=
+        this.currentToken.value.split(Symbols.NEW_LINE).length - 1;
       this.currentCol = 1;
     } else {
       this.currentCol += amount;

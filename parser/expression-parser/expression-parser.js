@@ -1,8 +1,9 @@
-import { Expression } from './expression.js';
-import { BRACKETS, BRACKETS_MAP, Utils } from '../../utils/utils.js';
-import { StatementParser } from '../statement-parser/statement-parser.js';
-import { ScopeParser } from '../scope-parser/scope-parser.js';
-import { Symbols } from '../../symbols.js';
+import { Expression } from "./expression.js";
+import { BRACKETS, BRACKETS_MAP, Utils } from "../../utils/utils.js";
+import { StatementParser } from "../statement-parser/statement-parser.js";
+import { ScopeParser } from "../scope-parser/scope-parser.js";
+import { Symbols } from "../../symbols.js";
+import { Keywords } from "../../keywords.js";
 
 export class ExpressionParser {
   parser;
@@ -17,7 +18,12 @@ export class ExpressionParser {
   }
 
   parse(owner) {
-    this.searchingArray = Utils.joinTokens(this.parser.getFromCurrentToEnd(), this.parser.tokenizer.allTokens, 'semicolon');
+    const filteredArray = this.parser.getFromCurrentToEnd();
+    this.searchingArray = Utils.joinTokens(
+      filteredArray,
+      this.parser.tokenizer.allTokens,
+      "semicolon"
+    );
     this.expression = new Expression();
     this.findExpression();
     owner.parts.push(this.expression);
@@ -34,7 +40,11 @@ export class ExpressionParser {
 
     this.expression.parts.push(this.parser.currentToken);
 
-    if (this.isSemicolonNext() || this.isOutsideBracket() || this.isEndOfLine()) {
+    if (
+      this.isSemicolonNext() ||
+      this.isOutsideBracket() ||
+      this.isEndOfLine()
+    ) {
       return true;
     }
 
@@ -47,8 +57,10 @@ export class ExpressionParser {
   }
 
   isOutsideBracket() {
-    return !this.isScope(this.parser.currentToken, this.parser.getNext()) &&
-      this.checkBracket(this.parser.getNext());
+    return (
+      !this.isScope(this.parser.currentToken, this.parser.getNext()) &&
+      this.checkBracket(this.parser.getNext())
+    );
   }
 
   isSemicolonNext() {
@@ -60,7 +72,7 @@ export class ExpressionParser {
   checkStructure() {
     const token = this.parser.currentToken;
 
-    if (token.is('function')) {
+    if (token.is(Keywords.FUNCTION)) {
       return this.checkFunction();
     } else if (token.is(Symbols.OPENING_BRACE)) {
       return this.checkScope();
@@ -78,7 +90,10 @@ export class ExpressionParser {
   }
 
   checkScope() {
-    const isScope = this.isScope(this.parser.getPrevious(), this.parser.currentToken);
+    const isScope = this.isScope(
+      this.parser.getPrevious(),
+      this.parser.currentToken
+    );
     if (isScope) {
       return this.getScope();
     } else {
@@ -116,12 +131,21 @@ export class ExpressionParser {
 
   checkEndOfLine(token, previous) {
     if (token.row !== previous.row) {
-      return !(token.isOperator() || previous.isOperator() ||
-        BRACKETS.includes(token.value) || BRACKETS.includes(previous.value));
-    } else { return false; }
+      return !(
+        token.isOperator() ||
+        previous.isOperator() ||
+        BRACKETS.includes(token.value) ||
+        BRACKETS.includes(previous.value)
+      );
+    } else {
+      return false;
+    }
   }
 
   isScope(leftBracket, rightBracket) {
-    return leftBracket.value === Symbols.CLOSING_PARENTHESIS && rightBracket.value === Symbols.OPENING_BRACE;
+    return (
+      leftBracket.value === Symbols.CLOSING_PARENTHESIS &&
+      rightBracket.value === Symbols.OPENING_BRACE
+    );
   }
 }

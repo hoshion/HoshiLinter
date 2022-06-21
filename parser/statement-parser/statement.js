@@ -1,4 +1,4 @@
-import {TokenTypes} from "../../token-types.js";
+import { TokenTypes } from "../../token-types.js";
 
 export class Statement {
   type;

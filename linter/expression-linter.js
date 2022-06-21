@@ -1,14 +1,14 @@
-import { Symbols } from '../symbols.js';
-import { ExpressionSurrounder } from './expression-surrounder.js';
-import { TAB } from './linter.js';
-import {TokenTypes} from "../token-types.js";
-import {Operators} from "../operators.js";
-import {Token} from "../tokenizer/token.js";
+import { Symbols } from "../symbols.js";
+import { ExpressionSurrounder } from "./expression-surrounder.js";
+import { TAB } from "./linter.js";
+import { TokenTypes } from "../token-types.js";
+import { Operators } from "../operators.js";
+import { Token } from "../tokenizer/token.js";
 
 const BRACKETS = [
   [Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS],
   [Symbols.OPENING_BRACE, Symbols.CLOSING_BRACE],
-  [Symbols.CLOSING_BRACKET, Symbols.CLOSING_BRACKET]
+  [Symbols.CLOSING_BRACKET, Symbols.CLOSING_BRACKET],
 ];
 
 export class ExpressionLinter {
@@ -25,11 +25,18 @@ export class ExpressionLinter {
   }
 
   lint() {
-    for (this.index = 0; this.index < this.expression.parts.length; this.index++) {
+    for (
+      this.index = 0;
+      this.index < this.expression.parts.length;
+      this.index++
+    ) {
       this.str += this.lintPart();
     }
 
-    this.str = new ExpressionSurrounder(this.linter, this.str).surround(this.expression, this.structure);
+    this.str = new ExpressionSurrounder(this.linter, this.str).surround(
+      this.expression,
+      this.structure
+    );
     return this.str;
   }
 
@@ -55,24 +62,41 @@ export class ExpressionLinter {
     }
   }
 
-  getStringsMap (token) {
+  getStringsMap(token) {
     return new Map([
-      [Symbols.PLUS, this.addSpace() + token.value + this.addSpaceNotAfter(TokenTypes.STRING)],
-      [Symbols.OPENING_BRACE, Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab()],
-      [Symbols.CLOSING_BRACE, Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE],
-      [Symbols.COMMA, this.isNewLine() ?
-        Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab() :
-        Symbols.COMMA + Symbols.SPACE
+      [
+        Symbols.PLUS,
+        this.addSpace() +
+          token.value +
+          this.addSpaceNotAfter(TokenTypes.STRING),
+      ],
+      [
+        Symbols.OPENING_BRACE,
+        Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab(),
+      ],
+      [
+        Symbols.CLOSING_BRACE,
+        Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE,
+      ],
+      [
+        Symbols.COMMA,
+        this.isNewLine()
+          ? Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab()
+          : Symbols.COMMA + Symbols.SPACE,
       ],
       [Symbols.DOT, token.value],
       [Symbols.EXCLAMATION_MARK, token.value],
-    ])
+    ]);
   }
 
   checkOtherRules(token) {
     const value = token.value;
     if (token.isType(TokenTypes.KEYWORD) || token.isOperator()) {
-      const spaceAfter = this.addSpaceNotAfter(this.index, Operators.DOT, TokenTypes.CLOSING_PARENTHESIS);
+      const spaceAfter = this.addSpaceNotAfter(
+        this.index,
+        Operators.DOT,
+        TokenTypes.CLOSING_PARENTHESIS
+      );
       return this.addSpace() + value + spaceAfter;
     } else {
       return value;
@@ -96,7 +120,7 @@ export class ExpressionLinter {
       [Symbols.OPENING_PARENTHESIS, 0],
       [Symbols.OPENING_BRACE, 0],
       [Symbols.OPENING_BRACKET, 0],
-      [Symbols.OPENING_ANGLE, 0]
+      [Symbols.OPENING_ANGLE, 0],
     ]);
     for (let i = 0; i < this.str.length; i++) {
       for (const [open, close] of BRACKETS) {
@@ -116,9 +140,7 @@ export class ExpressionLinter {
         }
       }
     }
-    return index ?
-      isNewLine :
-      false;
+    return index ? isNewLine : false;
   }
 
   bracketIndex(symbol, openingSymbol, closingSymbol, index) {
@@ -131,7 +153,11 @@ export class ExpressionLinter {
       !this.str.endsWith(Symbols.SPACE) &&
       !this.str.endsWith(Symbols.OPENING_PARENTHESIS) &&
       this.str !== Symbols.NOTHING
-    ) { return Symbols.SPACE; } else { return Symbols.NOTHING; }
+    ) {
+      return Symbols.SPACE;
+    } else {
+      return Symbols.NOTHING;
+    }
   }
 
   check() {
@@ -139,7 +165,7 @@ export class ExpressionLinter {
     return (type) => {
       if (!next) return true;
       return next && next instanceof Token && next.isType(type);
-    }
+    };
   }
 
   addSpaceNotAfter(...types) {

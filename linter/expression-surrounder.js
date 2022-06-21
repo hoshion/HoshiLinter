@@ -1,7 +1,7 @@
-import { Token } from '../tokenizer/token.js';
-import { Symbols } from '../symbols.js';
-import { Utils } from '../utils/utils.js';
-import {SurrounderUtils} from "./surrounder-utils.js";
+import { Token } from "../tokenizer/token.js";
+import { Symbols } from "../symbols.js";
+import { Utils } from "../utils/utils.js";
+import { SurrounderUtils } from "./surrounder-utils.js";
 
 export class ExpressionSurrounder {
   linter;
@@ -16,7 +16,8 @@ export class ExpressionSurrounder {
     const i = structure.indexOf(part);
     const next = structure[i + 1];
 
-    const isNextParenthesis = next && next instanceof Token && next.is(Symbols.CLOSING_PARENTHESIS);
+    const isNextParenthesis =
+      next && next instanceof Token && next.is(Symbols.CLOSING_PARENTHESIS);
 
     if (!isNextParenthesis && !this.isEndedByClosingBrace(part)) {
       this.str += Symbols.SEMICOLON;

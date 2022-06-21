@@ -1,7 +1,7 @@
-import { Symbols } from '../symbols.js';
-import { TAB } from './linter.js';
-import {Token} from "../tokenizer/token.js";
-import {Keywords} from "../keywords.js";
+import { Symbols } from "../symbols.js";
+import { TAB } from "./linter.js";
+import { Token } from "../tokenizer/token.js";
+import { Keywords } from "../keywords.js";
 
 export class ScopeLinter {
   str = Symbols.NOTHING;
@@ -31,7 +31,6 @@ export class ScopeLinter {
     }
 
     this.surround();
-
     return this.str;
   }
 
@@ -48,23 +47,15 @@ export class ScopeLinter {
   lintToken(token) {
     if (token.is(Symbols.OPENING_BRACE)) {
       this.isBraced = true;
-      return Symbols.SPACE + Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab();
-    } else if (token.is(Symbols.CLOSING_BRACE)) {
-      this.removeTab();
-      return Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE;
-    } else {
-      return Symbols.NOTHING;
     }
+
+    return Symbols.NOTHING;
   }
 
   surround() {
-    if (!this.isBraced && this.isNewLinedBefore) {
-      this.str = Symbols.NEW_LINE + this.linter.tab() + this.str;
-    }
-
-    if (!this.isBraced) {
-      this.removeTab();
-    }
+    this.surroundBefore();
+    this.removeTab();
+    this.surroundAfter();
   }
 
   checkPreviousToken(value) {
@@ -82,6 +73,30 @@ export class ScopeLinter {
   removeTab() {
     if (this.isTabbed) {
       this.linter.tabSpace -= TAB;
+    }
+  }
+
+  surroundBefore() {
+    let beforeStr = Symbols.NOTHING;
+
+    if (this.isBraced) {
+      beforeStr =
+        Symbols.SPACE +
+        Symbols.OPENING_BRACE +
+        Symbols.NEW_LINE +
+        this.linter.tab();
+    } else {
+      if (this.isNewLinedBefore) {
+        beforeStr = Symbols.NEW_LINE + this.linter.tab();
+      }
+    }
+
+    this.str = beforeStr + this.str;
+  }
+
+  surroundAfter() {
+    if (this.isBraced) {
+      this.str += Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE;
     }
   }
 }

@@ -1,4 +1,4 @@
-import {Operators} from "../operators.js";
+import { Operators } from "../operators.js";
 
 export class Token {
   row;
@@ -8,7 +8,7 @@ export class Token {
   length;
   index;
 
-  constructor(row, col, type = 'undefined', value = 'null') {
+  constructor(row, col, type = "undefined", value = "null") {
     this.row = row;
     this.col = col;
     this.type = type;
@@ -26,6 +26,6 @@ export class Token {
 
   isOperator() {
     const values = Object.values(Operators);
-    return values.some((value) => value === this.type)
+    return values.some((value) => value === this.type);
   }
 }
