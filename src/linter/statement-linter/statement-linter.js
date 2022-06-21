@@ -1,8 +1,8 @@
-import { Symbols } from "../../enums/symbols.js";
-import { Utils } from "../../utils/utils.js";
-import { SurrounderUtils } from "../../utils/surrounder-utils.js";
-import { Keywords } from "../../enums/keywords.js";
-import { TokenTypes } from "../../enums/token-types.js";
+import { Symbols } from '../../enums/symbols.js';
+import { Utils } from '../../utils/utils.js';
+import { SurrounderUtils } from '../../utils/surrounder-utils.js';
+import { Keywords } from '../../enums/keywords.js';
+import { TokenTypes } from '../../enums/token-types.js';
 
 export class StatementLinter {
   str = Symbols.NOTHING;

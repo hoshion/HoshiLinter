@@ -1,8 +1,8 @@
-import { StatementParser } from "./statement-parser/statement-parser.js";
-import { ScopeParser } from "./scope-parser/scope-parser.js";
-import { ExpressionParser } from "./expression-parser/expression-parser.js";
-import { Symbols } from "../enums/symbols.js";
-import { Keywords } from "../enums/keywords.js";
+import { StatementParser } from './statement-parser/statement-parser.js';
+import { ScopeParser } from './scope-parser/scope-parser.js';
+import { ExpressionParser } from './expression-parser/expression-parser.js';
+import { Symbols } from '../enums/symbols.js';
+import { Keywords } from '../enums/keywords.js';
 
 export const STATEMENT_KEYWORD_LIST = [
   Keywords.IF,

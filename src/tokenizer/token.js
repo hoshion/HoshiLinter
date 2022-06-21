@@ -1,4 +1,4 @@
-import { Operators } from "../enums/operators.js";
+import { Operators } from '../enums/operators.js';
 
 export class Token {
   row;
@@ -8,7 +8,7 @@ export class Token {
   length;
   index;
 
-  constructor(row, col, type = "undefined", value = "null") {
+  constructor(row, col, type = 'undefined', value = 'null') {
     this.row = row;
     this.col = col;
     this.type = type;
