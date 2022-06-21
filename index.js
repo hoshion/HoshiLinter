@@ -1,8 +1,8 @@
-import { Tokenizer } from "./tokenizer/tokenizer.js";
+import { Tokenizer } from "./src/tokenizer/tokenizer.js";
 import fs from "fs";
 import { execSync } from "child_process";
-import { Parser } from "./parser/parser.js";
-import { Linter } from "./linter/linter.js";
+import { Parser } from "./src/parser/parser.js";
+import { Linter } from "./src/linter/linter.js";
 
 const fileName =
   process.argv[2] && process.argv[2] !== "--fullLog"

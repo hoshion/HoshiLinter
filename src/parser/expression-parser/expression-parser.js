@@ -2,8 +2,8 @@ import { Expression } from "./expression.js";
 import { BRACKETS, BRACKETS_MAP, Utils } from "../../utils/utils.js";
 import { StatementParser } from "../statement-parser/statement-parser.js";
 import { ScopeParser } from "../scope-parser/scope-parser.js";
-import { Symbols } from "../../symbols.js";
-import { Keywords } from "../../keywords.js";
+import { Symbols } from "../../enums/symbols.js";
+import { Keywords } from "../../enums/keywords.js";
 
 export class ExpressionParser {
   parser;

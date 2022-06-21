@@ -1,7 +1,7 @@
-import { Keywords } from "../../keywords.js";
-import { Symbols } from "../../symbols.js";
-import { Structures } from "../../structures.js";
-import { TokenTypes } from "../../token-types.js";
+import { Keywords } from "../../enums/keywords.js";
+import { Symbols } from "../../enums/symbols.js";
+import { Structures } from "../../enums/structures.js";
+import { TokenTypes } from "../../enums/token-types.js";
 
 export const STATEMENTS_STRUCTURES = new Map([
   [

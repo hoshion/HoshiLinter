@@ -1,7 +1,7 @@
-import { Symbols } from "../../symbols.js";
+import { Symbols } from "../../enums/symbols.js";
 import { TAB } from "../linter.js";
 import { Token } from "../../tokenizer/token.js";
-import { Keywords } from "../../keywords.js";
+import { Keywords } from "../../enums/keywords.js";
 
 export class ScopeLinter {
   str = Symbols.NOTHING;

@@ -1,7 +1,7 @@
 import { Token } from "./token.js";
-import { Symbols } from "../symbols.js";
-import { TokenTypes } from "../token-types.js";
-import { Operators } from "../operators.js";
+import { Symbols } from "../enums/symbols.js";
+import { TokenTypes } from "../enums/token-types.js";
+import { Operators } from "../enums/operators.js";
 
 /* eslint-disable */
 const keywordRegex =
