@@ -1,4 +1,3 @@
-'use strict';
 
 import { Symbols } from '../enums/symbols.js';
 import fs from 'fs';

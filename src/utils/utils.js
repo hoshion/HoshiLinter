@@ -1,9 +1,8 @@
-'use strict';
 
 export const BRACKETS_MAP = new Map([
   ['[', ']'],
   ['{', '}'],
-  ['(', ')'],
+  ['(', ')']
 ]);
 export const BRACKETS = ['[', ']', '{', '}', '(', ')'];
 

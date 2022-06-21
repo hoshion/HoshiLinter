@@ -1,4 +1,3 @@
-'use strict';
 
 import { Statement } from './statement.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';

@@ -1,8 +1,8 @@
-'use strict';
 
 import { Operators } from '../enums/operators.js';
 
 export class Token {
+  static INDEX = 1;
   row;
   col;
   type;
@@ -16,6 +16,7 @@ export class Token {
     this.type = type;
     this.value = value;
     this.length = 4;
+    this.index = Token.INDEX++;
   }
 
   is(value) {
@@ -28,6 +29,6 @@ export class Token {
 
   isOperator() {
     const values = Object.values(Operators);
-    return values.some((value) => value === this.type);
+    return values.some(value => value === this.type);
   }
 }

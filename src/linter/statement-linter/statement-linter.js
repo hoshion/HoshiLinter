@@ -1,4 +1,3 @@
-'use strict';
 
 import { Symbols } from '../../enums/symbols.js';
 import { Utils } from '../../utils/utils.js';
@@ -46,10 +45,13 @@ export class StatementLinter {
   }
 
   lintToken(token) {
-    const spaceAfterToken = token.isType(TokenTypes.KEYWORD)
-      ? Symbols.SPACE
-      : Symbols.NOTHING;
-    return this.addSpace() + token.value + spaceAfterToken;
+    const spaceAfterToken = token.isType(TokenTypes.KEYWORD) ?
+      Symbols.SPACE :
+      Symbols.NOTHING;
+    const spaceBeforeToken = token.is(Symbols.CLOSING_PARENTHESIS) ?
+      Symbols.NOTHING :
+      this.addSpace();
+    return spaceBeforeToken + token.value + spaceAfterToken;
   }
 
   surround() {

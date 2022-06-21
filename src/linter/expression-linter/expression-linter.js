@@ -1,4 +1,3 @@
-'use strict';
 
 import { Symbols } from '../../enums/symbols.js';
 import { ExpressionSurrounder } from './expression-surrounder.js';
@@ -10,7 +9,7 @@ import { Token } from '../../tokenizer/token.js';
 const BRACKETS = [
   [Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS],
   [Symbols.OPENING_BRACE, Symbols.CLOSING_BRACE],
-  [Symbols.CLOSING_BRACKET, Symbols.CLOSING_BRACKET],
+  [Symbols.CLOSING_BRACKET, Symbols.CLOSING_BRACKET]
 ];
 
 export class ExpressionLinter {
@@ -70,24 +69,24 @@ export class ExpressionLinter {
         Symbols.PLUS,
         this.addSpace() +
           token.value +
-          this.addSpaceNotAfter(TokenTypes.STRING),
+          this.addSpaceNotAfter(TokenTypes.STRING)
       ],
       [
         Symbols.OPENING_BRACE,
-        Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab(),
+        Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab()
       ],
       [
         Symbols.CLOSING_BRACE,
-        Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE,
+        Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE
       ],
       [
         Symbols.COMMA,
-        this.isNewLine()
-          ? Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab()
-          : Symbols.COMMA + Symbols.SPACE,
+        this.isNewLine() ?
+          Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab() :
+          Symbols.COMMA + Symbols.SPACE
       ],
       [Symbols.DOT, token.value],
-      [Symbols.EXCLAMATION_MARK, token.value],
+      [Symbols.EXCLAMATION_MARK, token.value]
     ]);
   }
 
@@ -122,7 +121,7 @@ export class ExpressionLinter {
       [Symbols.OPENING_PARENTHESIS, 0],
       [Symbols.OPENING_BRACE, 0],
       [Symbols.OPENING_BRACKET, 0],
-      [Symbols.OPENING_ANGLE, 0],
+      [Symbols.OPENING_ANGLE, 0]
     ]);
     for (let i = 0; i < this.str.length; i++) {
       for (const [open, close] of BRACKETS) {
@@ -164,7 +163,7 @@ export class ExpressionLinter {
 
   check() {
     const next = this.getNext();
-    return (type) => {
+    return type => {
       if (!next) return true;
       return next && next instanceof Token && next.isType(type);
     };

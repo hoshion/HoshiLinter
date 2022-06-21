@@ -1,4 +1,3 @@
-'use strict';
 
 export const Keywords = {
   ELSE: 'else',
@@ -19,5 +18,5 @@ export const Keywords = {
   CATCH: 'catch',
   FROM: 'from',
   FINALLY: 'finally',
-  FUNCTION: 'function',
+  FUNCTION: 'function'
 };

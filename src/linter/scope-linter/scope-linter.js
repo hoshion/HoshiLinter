@@ -1,4 +1,3 @@
-'use strict';
 
 import { Symbols } from '../../enums/symbols.js';
 import { TAB } from '../linter.js';
@@ -87,10 +86,8 @@ export class ScopeLinter {
         Symbols.OPENING_BRACE +
         Symbols.NEW_LINE +
         this.linter.tab();
-    } else {
-      if (this.isNewLinedBefore) {
-        beforeStr = Symbols.NEW_LINE + this.linter.tab();
-      }
+    } else if (this.isNewLinedBefore) {
+      beforeStr = Symbols.NEW_LINE + this.linter.tab();
     }
 
     this.str = beforeStr + this.str;

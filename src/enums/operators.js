@@ -1,4 +1,3 @@
-'use strict';
 
 export const Operators = {
   ARITHMETIC: 'arithmetic-operator',
@@ -11,5 +10,5 @@ export const Operators = {
   QUESTION_MARK: 'question-mark-operator',
   COLON: 'colon-operator',
   BITWISE: 'bitwise-operator',
-  ARROW: 'arrow-operator',
+  ARROW: 'arrow-operator'
 };
