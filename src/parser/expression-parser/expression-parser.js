@@ -1,3 +1,5 @@
+'use strict';
+
 import { Expression } from './expression.js';
 import { BRACKETS, BRACKETS_MAP, Utils } from '../../utils/utils.js';
 import { StatementParser } from '../statement-parser/statement-parser.js';

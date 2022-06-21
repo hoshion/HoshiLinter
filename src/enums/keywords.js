@@ -1,3 +1,5 @@
+'use strict';
+
 export const Keywords = {
   ELSE: 'else',
   WHILE: 'while',

@@ -1,3 +1,5 @@
+'use strict';
+
 import { Symbols } from '../../enums/symbols.js';
 import { Utils } from '../../utils/utils.js';
 import { SurrounderUtils } from '../../utils/surrounder-utils.js';

@@ -1,3 +1,5 @@
+'use strict';
+
 import { Token } from './token.js';
 import { Symbols } from '../enums/symbols.js';
 import { TokenTypes } from '../enums/token-types.js';

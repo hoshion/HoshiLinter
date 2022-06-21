@@ -1,3 +1,5 @@
+'use strict';
+
 import { StatementParser } from './statement-parser/statement-parser.js';
 import { ScopeParser } from './scope-parser/scope-parser.js';
 import { ExpressionParser } from './expression-parser/expression-parser.js';

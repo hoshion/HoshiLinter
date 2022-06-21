@@ -1,3 +1,5 @@
+'use strict';
+
 export const TokenTypes = {
   END_OF_LINE: 'end-of-line',
   MULTILINE_COMMENT: 'multiline-comment',

@@ -1,3 +1,5 @@
+'use strict';
+
 export const Symbols = {
   SEMICOLON: ';',
   NEW_LINE: '\n',

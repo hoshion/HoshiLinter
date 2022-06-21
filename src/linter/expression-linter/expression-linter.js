@@ -1,3 +1,5 @@
+'use strict';
+
 import { Symbols } from '../../enums/symbols.js';
 import { ExpressionSurrounder } from './expression-surrounder.js';
 import { TAB } from '../linter.js';

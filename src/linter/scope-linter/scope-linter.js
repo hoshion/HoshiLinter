@@ -1,3 +1,5 @@
+'use strict';
+
 import { Symbols } from '../../enums/symbols.js';
 import { TAB } from '../linter.js';
 import { Token } from '../../tokenizer/token.js';
