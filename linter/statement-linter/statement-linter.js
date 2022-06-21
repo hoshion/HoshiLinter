@@ -1,8 +1,8 @@
-import { Symbols } from "../symbols.js";
-import { Utils } from "../utils/utils.js";
-import { SurrounderUtils } from "./surrounder-utils.js";
-import { Keywords } from "../keywords.js";
-import { TokenTypes } from "../token-types.js";
+import { Symbols } from "../../symbols.js";
+import { Utils } from "../../utils/utils.js";
+import { SurrounderUtils } from "../../utils/surrounder-utils.js";
+import { Keywords } from "../../keywords.js";
+import { TokenTypes } from "../../token-types.js";
 
 export class StatementLinter {
   str = Symbols.NOTHING;

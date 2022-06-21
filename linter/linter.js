@@ -1,8 +1,8 @@
 import { Symbols } from "../symbols.js";
 import fs from "fs";
-import { ExpressionLinter } from "./expression-linter.js";
-import { ScopeLinter } from "./scope-linter.js";
-import { StatementLinter } from "./statement-linter.js";
+import { ExpressionLinter } from "./expression-linter/expression-linter.js";
+import { ScopeLinter } from "./scope-linter/scope-linter.js";
+import { StatementLinter } from "./statement-linter/statement-linter.js";
 import { Structures } from "../structures.js";
 
 export const TAB = 2;

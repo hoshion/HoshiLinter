@@ -1,5 +1,5 @@
 import { Symbols } from "../symbols.js";
-import { Utils } from "../utils/utils.js";
+import { Utils } from "./utils.js";
 import { Token } from "../tokenizer/token.js";
 
 export class SurrounderUtils {

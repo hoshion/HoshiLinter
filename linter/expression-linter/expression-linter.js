@@ -1,9 +1,9 @@
-import { Symbols } from "../symbols.js";
+import { Symbols } from "../../symbols.js";
 import { ExpressionSurrounder } from "./expression-surrounder.js";
-import { TAB } from "./linter.js";
-import { TokenTypes } from "../token-types.js";
-import { Operators } from "../operators.js";
-import { Token } from "../tokenizer/token.js";
+import { TAB } from "../linter.js";
+import { TokenTypes } from "../../token-types.js";
+import { Operators } from "../../operators.js";
+import { Token } from "../../tokenizer/token.js";
 
 const BRACKETS = [
   [Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS],

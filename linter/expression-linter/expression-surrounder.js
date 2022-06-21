@@ -1,7 +1,7 @@
-import { Token } from "../tokenizer/token.js";
-import { Symbols } from "../symbols.js";
-import { Utils } from "../utils/utils.js";
-import { SurrounderUtils } from "./surrounder-utils.js";
+import { Token } from "../../tokenizer/token.js";
+import { Symbols } from "../../symbols.js";
+import { Utils } from "../../utils/utils.js";
+import { SurrounderUtils } from "../../utils/surrounder-utils.js";
 
 export class ExpressionSurrounder {
   linter;
