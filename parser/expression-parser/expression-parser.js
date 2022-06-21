@@ -116,7 +116,7 @@ export class ExpressionParser {
 
   checkEndOfLine(token, previous) {
     if (token.row !== previous.row) {
-      return !(token.type.endsWith('operator') || previous.type.endsWith('operator') ||
+      return !(token.isOperator() || previous.isOperator() ||
         BRACKETS.includes(token.value) || BRACKETS.includes(previous.value));
     } else { return false; }
   }

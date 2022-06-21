@@ -69,10 +69,10 @@ export class ExpressionLinter {
     ])
   }
 
-  checkOtherRules(token, index) {
+  checkOtherRules(token) {
     const value = token.value;
     if (token.isType(TokenTypes.KEYWORD) || token.isOperator()) {
-      const spaceAfter = this.addSpaceNotAfter(index, Operators.DOT, TokenTypes.CLOSING_PARENTHESIS);
+      const spaceAfter = this.addSpaceNotAfter(this.index, Operators.DOT, TokenTypes.CLOSING_PARENTHESIS);
       return this.addSpace() + value + spaceAfter;
     } else {
       return value;
@@ -135,8 +135,9 @@ export class ExpressionLinter {
   }
 
   check() {
+    const next = this.getNext();
     return (type) => {
-      const next = this.getNext();
+      if (!next) return true;
       return next && next instanceof Token && next.isType(type);
     }
   }

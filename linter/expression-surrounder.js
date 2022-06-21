@@ -14,12 +14,11 @@ export class ExpressionSurrounder {
 
   surround(part, structure) {
     const i = structure.indexOf(part);
-
     const next = structure[i + 1];
 
-    const isNextComma = next && next instanceof Token && next.value === Symbols.CLOSING_PARENTHESIS;
+    const isNextParenthesis = next && next instanceof Token && next.is(Symbols.CLOSING_PARENTHESIS);
 
-    if (!isNextComma && !this.isEndedByClosingBrace(part)) {
+    if (!isNextParenthesis && !this.isEndedByClosingBrace(part)) {
       this.str += Symbols.SEMICOLON;
     }
 

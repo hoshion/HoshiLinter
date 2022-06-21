@@ -8,20 +8,20 @@ import {Keywords} from "../../keywords.js";
 import {TokenTypes} from "../../token-types.js";
 
 const STATEMENTS_STRUCTURES = new Map([
-  ['if', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE, [Symbols.QUESTION_MARK, Keywords.ELSE, Structures.SCOPE]]],
-  ['for', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, [Symbols.QUESTION_MARK, Structures.EXPRESSION, Structures.EXPRESSION], Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  ['function', [TokenTypes.IDENTIFIER, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  ['do', [Structures.SCOPE, Keywords.WHILE, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS]],
-  ['while', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  ['throw', [Structures.EXPRESSION]],
-  ['class', [TokenTypes.IDENTIFIER, Structures.SCOPE]],
-  ['switch', [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
-  ['let', [Structures.EXPRESSION]],
-  ['const', [Structures.EXPRESSION]],
-  ['var', [Structures.EXPRESSION]],
-  ['import', [Structures.SCOPE, 'from', TokenTypes.IDENTIFIER]],
-  ['export', [[Symbols.QUESTION_MARK, 'default'], Structures.SCOPE]],
-  ['try', [Structures.SCOPE, [Symbols.QUESTION_MARK, 'catch', Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE], [Symbols.QUESTION_MARK, 'finally', Structures.SCOPE]]]
+  [Keywords.IF, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE, [Symbols.QUESTION_MARK, Keywords.ELSE, Structures.SCOPE]]],
+  [Keywords.FOR, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, [Symbols.QUESTION_MARK, Structures.EXPRESSION, Structures.EXPRESSION], Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.FUNCTION, [TokenTypes.IDENTIFIER, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.DO, [Structures.SCOPE, Keywords.WHILE, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS]],
+  [Keywords.WHILE, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.THROW, [Structures.EXPRESSION]],
+  [Keywords.CLASS, [TokenTypes.IDENTIFIER, Structures.SCOPE]],
+  [Keywords.SWITCH, [Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE]],
+  [Keywords.LET, [Structures.EXPRESSION]],
+  [Keywords.CONST, [Structures.EXPRESSION]],
+  [Keywords.VAR, [Structures.EXPRESSION]],
+  [Keywords.IMPORT, [Structures.SCOPE, Keywords.FROM, TokenTypes.IDENTIFIER]],
+  [Keywords.EXPORT, [[Symbols.QUESTION_MARK, Keywords.DEFAULT], Structures.SCOPE]],
+  [Keywords.TRY, [Structures.SCOPE, [Symbols.QUESTION_MARK, Keywords.CATCH, Symbols.OPENING_PARENTHESIS, Structures.EXPRESSION, Symbols.CLOSING_PARENTHESIS, Structures.SCOPE], [Symbols.QUESTION_MARK, Keywords.FINALLY, Structures.SCOPE]]]
 ]);
 
 export class StatementParser {
@@ -76,7 +76,6 @@ export class StatementParser {
       this.parser.next();
     }
     this.parser.previous();
-    console.log(this.parser.currentToken);
   }
 
   checkElement(element) {

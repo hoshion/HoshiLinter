@@ -2,11 +2,13 @@ import { StatementParser } from './statement-parser/statement-parser.js';
 import { ScopeParser } from './scope-parser/scope-parser.js';
 import { ExpressionParser } from './expression-parser/expression-parser.js';
 import { Symbols } from '../symbols.js';
+import {Keywords} from "../keywords.js";
 
 export const STATEMENT_KEYWORD_LIST = [
-  'if', 'for', 'do', 'class', 'while', 'throw',
-  'switch', 'function', 'var', 'let', 'const',
-  'import', 'export', 'try'
+  Keywords.IF, Keywords.FOR, Keywords.DO, Keywords.CLASS,
+  Keywords.WHILE, Keywords.THROW, Keywords.SWITCH,
+  Keywords.FUNCTION, Keywords.VAR, Keywords.LET, Keywords.CONST,
+  Keywords.IMPORT, Keywords.EXPORT, Keywords.TRY,
 ];
 
 export class Parser {
