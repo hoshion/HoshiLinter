@@ -1,10 +1,9 @@
 export const BRACKETS_MAP = new Map([
-  ['[', ']'],
-  ['{', '}'],
-  ['(', ')'],
-  ['<', '>']
+  ["[", "]"],
+  ["{", "}"],
+  ["(", ")"],
 ]);
-export const BRACKETS = ['[', ']', '{', '}', '(', ')', '<', '>'];
+export const BRACKETS = ["[", "]", "{", "}", "(", ")"];
 
 export class Utils {
   static findClosingBracket(opening, tokens) {

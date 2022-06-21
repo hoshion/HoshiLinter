@@ -1,12 +1,24 @@
-import { StatementParser } from './statement-parser/statement-parser.js';
-import { ScopeParser } from './scope-parser/scope-parser.js';
-import { ExpressionParser } from './expression-parser/expression-parser.js';
-import { Symbols } from '../symbols';
+import { StatementParser } from "./statement-parser/statement-parser.js";
+import { ScopeParser } from "./scope-parser/scope-parser.js";
+import { ExpressionParser } from "./expression-parser/expression-parser.js";
+import { Symbols } from "../enums/symbols.js";
+import { Keywords } from "../enums/keywords.js";
 
 export const STATEMENT_KEYWORD_LIST = [
-  'if', 'for', 'do', 'class', 'while', 'throw',
-  'switch', 'function', 'var', 'let', 'const',
-  'import', 'export', 'try'
+  Keywords.IF,
+  Keywords.FOR,
+  Keywords.DO,
+  Keywords.CLASS,
+  Keywords.WHILE,
+  Keywords.THROW,
+  Keywords.SWITCH,
+  Keywords.FUNCTION,
+  Keywords.VAR,
+  Keywords.LET,
+  Keywords.CONST,
+  Keywords.IMPORT,
+  Keywords.EXPORT,
+  Keywords.TRY,
 ];
 
 export class Parser {
@@ -22,7 +34,7 @@ export class Parser {
 
   parse() {
     this.currentToken = this.tokenizer.filteredTokens[this.currentTokenId];
-    while (this.tokenizer.filteredTokens[this.currentTokenId]) {
+    while (this.currentToken) {
       this.parseToken(this);
       this.next();
     }
@@ -44,21 +56,27 @@ export class Parser {
 
   getFromCurrentToExact(token) {
     const filteredTokens = this.tokenizer.filteredTokens;
-    return filteredTokens.slice(filteredTokens.indexOf(this.currentToken), filteredTokens.indexOf(token) + 1);
+    const firstIndex = filteredTokens.indexOf(this.currentToken);
+    const lastIndex = filteredTokens.indexOf(token) + 1;
+    return filteredTokens.slice(firstIndex, lastIndex);
   }
 
   parseToken(owner) {
     if (STATEMENT_KEYWORD_LIST.includes(this.currentToken.value)) {
-      new StatementParser(owner, this, this.currentToken).parse();
-    } else if (this.currentToken.value === Symbols.OPENING_BRACE) {
-      new ScopeParser(owner, this).parse();
+      new StatementParser(this).parse(owner);
+    } else if (this.currentToken.is(Symbols.OPENING_BRACE)) {
+      new ScopeParser(this).parse(owner);
     } else {
-      new ExpressionParser(owner, this).parse();
+      new ExpressionParser(this).parse(owner);
     }
   }
 
   log() {
     console.dir(this.parts, { depth: null });
+  }
+
+  getPrevious() {
+    return this.tokenizer.filteredTokens[this.currentTokenId - 1];
   }
 
   previous() {

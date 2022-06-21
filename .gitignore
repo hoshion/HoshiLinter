@@ -5,3 +5,7 @@
 /.idea/
 /test.js
 /node_modules/
+/test-linted.js
+/.eslintrc.cjs
+/.prettierignore
+/package-lock.json
