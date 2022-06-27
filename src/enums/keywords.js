@@ -1,4 +1,3 @@
-
 export const Keywords = {
   ELSE: 'else',
   WHILE: 'while',
@@ -18,5 +17,5 @@ export const Keywords = {
   CATCH: 'catch',
   FROM: 'from',
   FINALLY: 'finally',
-  FUNCTION: 'function'
+  FUNCTION: 'function',
 };

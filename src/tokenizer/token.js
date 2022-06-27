@@ -1,4 +1,3 @@
-
 import { Operators } from '../enums/operators.js';
 
 export class Token {
@@ -29,6 +28,6 @@ export class Token {
 
   isOperator() {
     const values = Object.values(Operators);
-    return values.some(value => value === this.type);
+    return values.some((value) => value === this.type);
   }
 }

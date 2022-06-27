@@ -1,4 +1,3 @@
-
 import { Statement } from './statement.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';
@@ -7,15 +6,15 @@ import { Symbols } from '../../enums/symbols.js';
 import { Structures } from '../../enums/structures.js';
 import { TokenTypes } from '../../enums/token-types.js';
 import { STATEMENTS_STRUCTURES } from './statement-structures.js';
+import { StructureParser } from '../structure-parser.js';
 
-export class StatementParser {
-  parser;
+export class StatementParser extends StructureParser {
   keywordToken;
   structure;
   statement;
 
   constructor(parser) {
-    this.parser = parser;
+    super(parser);
     this.keywordToken = this.parser.currentToken;
     this.structure = STATEMENTS_STRUCTURES.get(this.keywordToken.value);
   }
@@ -42,7 +41,7 @@ export class StatementParser {
     const firstPart = ruleArray[0];
     const isFirstParts = token.is(firstPart);
     const isExpression =
-      firstPart === Structures.EXPRESSION && this.isExpression(token.value);
+      firstPart === Structures.EXPRESSION && this.isExpression(token);
 
     if (isFirstParts || isExpression) {
       this.checkStructure(ruleArray);
@@ -50,18 +49,18 @@ export class StatementParser {
     }
   }
 
-  isExpression(curValue) {
+  isExpression(token) {
     return (
-      !STATEMENT_KEYWORD_LIST.includes(curValue) &&
-      curValue !== Symbols.OPENING_BRACE &&
-      curValue !== Symbols.CLOSING_PARENTHESIS
+      !STATEMENT_KEYWORD_LIST.includes(token.value) &&
+      !token.is(Symbols.OPENING_BRACE) &&
+      !token.is(Symbols.CLOSING_PARENTHESIS)
     );
   }
 
   checkStructure(structure) {
     for (const element of structure) {
       if (element instanceof Array) {
-        this.checkRule(Array.from(element));
+        this.checkRule([...element]);
         continue;
       }
 

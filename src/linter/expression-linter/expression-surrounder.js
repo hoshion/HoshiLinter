@@ -1,4 +1,3 @@
-
 import { Token } from '../../tokenizer/token.js';
 import { Symbols } from '../../enums/symbols.js';
 import { Utils } from '../../utils/utils.js';

@@ -1,4 +1,3 @@
-
 import { StatementParser } from './statement-parser/statement-parser.js';
 import { ScopeParser } from './scope-parser/scope-parser.js';
 import { ExpressionParser } from './expression-parser/expression-parser.js';
@@ -19,7 +18,7 @@ export const STATEMENT_KEYWORD_LIST = [
   Keywords.CONST,
   Keywords.IMPORT,
   Keywords.EXPORT,
-  Keywords.TRY
+  Keywords.TRY,
 ];
 
 export class Parser {

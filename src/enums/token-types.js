@@ -1,4 +1,3 @@
-
 export const TokenTypes = {
   END_OF_LINE: 'end-of-line',
   MULTILINE_COMMENT: 'multiline-comment',
@@ -16,5 +15,5 @@ export const TokenTypes = {
   CLOSING_BRACE: 'closing-brace',
   CLOSING_BRACKET: 'closing-bracket',
   NUMBER: 'number',
-  UNDEFINED: 'undefined'
+  UNDEFINED: 'undefined',
 };

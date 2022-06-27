@@ -1,4 +1,3 @@
-
 import { Keywords } from '../../enums/keywords.js';
 import { Symbols } from '../../enums/symbols.js';
 import { Structures } from '../../enums/structures.js';
@@ -12,8 +11,8 @@ export const STATEMENTS_STRUCTURES = new Map([
       Structures.EXPRESSION,
       Symbols.CLOSING_PARENTHESIS,
       Structures.SCOPE,
-      [Symbols.QUESTION_MARK, Keywords.ELSE, Structures.SCOPE]
-    ]
+      [Symbols.QUESTION_MARK, Keywords.ELSE, Structures.SCOPE],
+    ],
   ],
   [
     Keywords.FOR,
@@ -22,8 +21,8 @@ export const STATEMENTS_STRUCTURES = new Map([
       Structures.EXPRESSION,
       [Symbols.QUESTION_MARK, Structures.EXPRESSION, Structures.EXPRESSION],
       Symbols.CLOSING_PARENTHESIS,
-      Structures.SCOPE
-    ]
+      Structures.SCOPE,
+    ],
   ],
   [
     Keywords.FUNCTION,
@@ -32,8 +31,8 @@ export const STATEMENTS_STRUCTURES = new Map([
       Symbols.OPENING_PARENTHESIS,
       Structures.EXPRESSION,
       Symbols.CLOSING_PARENTHESIS,
-      Structures.SCOPE
-    ]
+      Structures.SCOPE,
+    ],
   ],
   [
     Keywords.DO,
@@ -42,8 +41,8 @@ export const STATEMENTS_STRUCTURES = new Map([
       Keywords.WHILE,
       Symbols.OPENING_PARENTHESIS,
       Structures.EXPRESSION,
-      Symbols.CLOSING_PARENTHESIS
-    ]
+      Symbols.CLOSING_PARENTHESIS,
+    ],
   ],
   [
     Keywords.WHILE,
@@ -51,8 +50,8 @@ export const STATEMENTS_STRUCTURES = new Map([
       Symbols.OPENING_PARENTHESIS,
       Structures.EXPRESSION,
       Symbols.CLOSING_PARENTHESIS,
-      Structures.SCOPE
-    ]
+      Structures.SCOPE,
+    ],
   ],
   [Keywords.THROW, [Structures.EXPRESSION]],
   [Keywords.CLASS, [TokenTypes.IDENTIFIER, Structures.SCOPE]],
@@ -62,8 +61,8 @@ export const STATEMENTS_STRUCTURES = new Map([
       Symbols.OPENING_PARENTHESIS,
       Structures.EXPRESSION,
       Symbols.CLOSING_PARENTHESIS,
-      Structures.SCOPE
-    ]
+      Structures.SCOPE,
+    ],
   ],
   [Keywords.LET, [Structures.EXPRESSION]],
   [Keywords.CONST, [Structures.EXPRESSION]],
@@ -71,7 +70,7 @@ export const STATEMENTS_STRUCTURES = new Map([
   [Keywords.IMPORT, [Structures.SCOPE, Keywords.FROM, TokenTypes.IDENTIFIER]],
   [
     Keywords.EXPORT,
-    [[Symbols.QUESTION_MARK, Keywords.DEFAULT], Structures.SCOPE]
+    [[Symbols.QUESTION_MARK, Keywords.DEFAULT], Structures.SCOPE],
   ],
   [
     Keywords.TRY,
@@ -83,9 +82,9 @@ export const STATEMENTS_STRUCTURES = new Map([
         Symbols.OPENING_PARENTHESIS,
         Structures.EXPRESSION,
         Symbols.CLOSING_PARENTHESIS,
-        Structures.SCOPE
+        Structures.SCOPE,
       ],
-      [Symbols.QUESTION_MARK, Keywords.FINALLY, Structures.SCOPE]
-    ]
-  ]
+      [Symbols.QUESTION_MARK, Keywords.FINALLY, Structures.SCOPE],
+    ],
+  ],
 ]);

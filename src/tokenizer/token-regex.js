@@ -1,4 +1,3 @@
-
 import { TokenTypes } from '../enums/token-types.js';
 import { Operators } from '../enums/operators.js';
 

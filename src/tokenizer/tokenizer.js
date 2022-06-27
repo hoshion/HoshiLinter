@@ -1,4 +1,3 @@
-
 import { Token } from './token.js';
 import { Symbols } from '../enums/symbols.js';
 import { TokenTypes } from '../enums/token-types.js';
@@ -8,7 +7,7 @@ const FILTERED_TYPES = [
   TokenTypes.END_OF_LINE,
   TokenTypes.WHITESPACE,
   TokenTypes.SEMICOLON,
-  TokenTypes.UNDEFINED
+  TokenTypes.UNDEFINED,
 ];
 
 export class Tokenizer {

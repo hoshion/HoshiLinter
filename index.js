@@ -1,4 +1,3 @@
-
 import { Tokenizer } from './src/tokenizer/tokenizer.js';
 import fs from 'fs';
 import { execSync } from 'child_process';
@@ -6,9 +5,9 @@ import { Parser } from './src/parser/parser.js';
 import { Linter } from './src/linter/linter.js';
 
 const fileName =
-  process.argv[2] && process.argv[2] !== '--fullLog' ?
-    process.argv[2] :
-    'test.js';
+  process.argv[2] && process.argv[2] !== '--fullLog'
+    ? process.argv[2]
+    : 'test.js';
 
 const file = fs.readFileSync(`./${fileName}`, 'utf8');
 

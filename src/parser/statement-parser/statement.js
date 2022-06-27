@@ -1,4 +1,3 @@
-
 import { TokenTypes } from '../../enums/token-types.js';
 
 export class Statement {
