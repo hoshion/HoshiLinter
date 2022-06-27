@@ -4,14 +4,10 @@ import { ExpressionParser } from '../expression-parser/expression-parser.js';
 import { Scope } from './scope.js';
 import { StatementParser } from '../statement-parser/statement-parser.js';
 import { Symbols } from '../../enums/symbols.js';
+import { StructureParser } from "../structure-parser.js";
 
-export class ScopeParser {
-  parser;
+export class ScopeParser extends StructureParser{
   scope;
-
-  constructor(parser) {
-    this.parser = parser;
-  }
 
   parse(owner) {
     this.scope = new Scope();

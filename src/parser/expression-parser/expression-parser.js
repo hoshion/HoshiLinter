@@ -5,18 +5,12 @@ import { ScopeParser } from '../scope-parser/scope-parser.js';
 import { Symbols } from '../../enums/symbols.js';
 import { Keywords } from '../../enums/keywords.js';
 import { TokenTypes } from '../../enums/token-types.js';
+import { StructureParser } from "../structure-parser.js";
 
-export class ExpressionParser {
-  parser;
-  startingToken;
+export class ExpressionParser extends StructureParser{
   expression;
   bracketsCounter = 0;
   searchingArray;
-
-  constructor(parser) {
-    this.parser = parser;
-    this.startingToken = this.parser.currentToken;
-  }
 
   parse(owner) {
     const filteredArray = this.parser.getFromCurrentToEnd();
