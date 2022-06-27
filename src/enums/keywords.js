@@ -17,5 +17,5 @@ export const Keywords = {
   CATCH: 'catch',
   FROM: 'from',
   FINALLY: 'finally',
-  FUNCTION: 'function'
+  FUNCTION: 'function',
 };

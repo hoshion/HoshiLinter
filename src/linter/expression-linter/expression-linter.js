@@ -51,24 +51,24 @@ export class ExpressionLinter extends StructureLinter {
         Symbols.PLUS,
         this.addSpace() +
           token.value +
-          this.addSpaceNotAfter(TokenTypes.STRING)
+          this.addSpaceNotAfter(TokenTypes.STRING),
       ],
       [
         Symbols.OPENING_BRACE,
-        Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab()
+        Symbols.OPENING_BRACE + Symbols.NEW_LINE + this.linter.tab(),
       ],
       [
         Symbols.CLOSING_BRACE,
-        Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE
+        Symbols.NEW_LINE + this.linter.tab() + Symbols.CLOSING_BRACE,
       ],
       [
         Symbols.COMMA,
-        this.isNewLine() ?
-          Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab() :
-          Symbols.COMMA + Symbols.SPACE
+        this.isNewLine()
+          ? Symbols.COMMA + Symbols.NEW_LINE + this.linter.tab()
+          : Symbols.COMMA + Symbols.SPACE,
       ],
       [Symbols.DOT, token.value],
-      [Symbols.EXCLAMATION_MARK, token.value]
+      [Symbols.EXCLAMATION_MARK, token.value],
     ]);
   }
 
@@ -103,7 +103,7 @@ export class ExpressionLinter extends StructureLinter {
       [Symbols.OPENING_PARENTHESIS, 0],
       [Symbols.OPENING_BRACE, 0],
       [Symbols.OPENING_BRACKET, 0],
-      [Symbols.OPENING_ANGLE, 0]
+      [Symbols.OPENING_ANGLE, 0],
     ]);
     for (let i = 0; i < this.str.length; i++) {
       for (const [open, close] of BRACKETS_MAP) {
@@ -145,7 +145,7 @@ export class ExpressionLinter extends StructureLinter {
 
   check() {
     const next = this.getNext();
-    return type => {
+    return (type) => {
       if (!next) return true;
       return next && next instanceof Token && next.isType(type);
     };

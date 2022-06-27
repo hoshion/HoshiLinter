@@ -16,5 +16,5 @@ export const Symbols = {
   LAMBDA: '=>',
   EXCLAMATION_MARK: '!',
   QUESTION_MARK: '?',
-  NOTHING: ''
+  NOTHING: '',
 };

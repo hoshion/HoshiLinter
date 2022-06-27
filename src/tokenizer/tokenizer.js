@@ -7,7 +7,7 @@ const FILTERED_TYPES = [
   TokenTypes.END_OF_LINE,
   TokenTypes.WHITESPACE,
   TokenTypes.SEMICOLON,
-  TokenTypes.UNDEFINED
+  TokenTypes.UNDEFINED,
 ];
 
 export class Tokenizer {

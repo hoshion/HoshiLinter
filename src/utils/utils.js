@@ -3,7 +3,7 @@ import { Symbols } from '../enums/symbols.js';
 export const BRACKETS_MAP = new Map([
   [Symbols.OPENING_BRACKET, Symbols.CLOSING_BRACKET],
   [Symbols.OPENING_BRACE, Symbols.CLOSING_BRACE],
-  [Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS]
+  [Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS],
 ]);
 
 export const BRACKETS = [
@@ -12,7 +12,7 @@ export const BRACKETS = [
   Symbols.OPENING_BRACE,
   Symbols.CLOSING_BRACE,
   Symbols.OPENING_PARENTHESIS,
-  Symbols.CLOSING_PARENTHESIS
+  Symbols.CLOSING_PARENTHESIS,
 ];
 
 export class Utils {
@@ -46,10 +46,12 @@ export class Utils {
   }
 
   static findIndex(filteredTokens, index) {
-    const resultIndex = filteredTokens.findIndex((token) => token.index > index);
-    return resultIndex === -1 ?
-      filteredTokens.length :
-      resultIndex;
+    const resultIndex = filteredTokens.findIndex(
+      (token) => token.index > index
+    );
+    return resultIndex === -1
+      ? filteredTokens.length
+      : resultIndex;
   }
 
   static plane(parts) {

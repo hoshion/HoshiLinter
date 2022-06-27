@@ -6,9 +6,9 @@ import { Symbols } from '../../enums/symbols.js';
 import { Structures } from '../../enums/structures.js';
 import { TokenTypes } from '../../enums/token-types.js';
 import { STATEMENTS_STRUCTURES } from './statement-structures.js';
-import { StructureParser } from "../structure-parser.js";
+import { StructureParser } from '../structure-parser.js';
 
-export class StatementParser extends StructureParser{
+export class StatementParser extends StructureParser {
   keywordToken;
   structure;
   statement;

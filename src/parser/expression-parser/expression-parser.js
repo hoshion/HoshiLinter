@@ -5,9 +5,9 @@ import { ScopeParser } from '../scope-parser/scope-parser.js';
 import { Symbols } from '../../enums/symbols.js';
 import { Keywords } from '../../enums/keywords.js';
 import { TokenTypes } from '../../enums/token-types.js';
-import { StructureParser } from "../structure-parser.js";
+import { StructureParser } from '../structure-parser.js';
 
-export class ExpressionParser extends StructureParser{
+export class ExpressionParser extends StructureParser {
   expression;
   bracketsCounter = 0;
   searchingArray;

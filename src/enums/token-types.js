@@ -15,5 +15,5 @@ export const TokenTypes = {
   CLOSING_BRACE: 'closing-brace',
   CLOSING_BRACKET: 'closing-bracket',
   NUMBER: 'number',
-  UNDEFINED: 'undefined'
+  UNDEFINED: 'undefined',
 };

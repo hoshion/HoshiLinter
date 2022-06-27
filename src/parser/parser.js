@@ -18,7 +18,7 @@ export const STATEMENT_KEYWORD_LIST = [
   Keywords.CONST,
   Keywords.IMPORT,
   Keywords.EXPORT,
-  Keywords.TRY
+  Keywords.TRY,
 ];
 
 export class Parser {

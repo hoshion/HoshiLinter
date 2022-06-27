@@ -36,12 +36,12 @@ export class StatementLinter extends StructureLinter {
   }
 
   lintToken(token) {
-    const spaceAfterToken = token.isType(TokenTypes.KEYWORD) ?
-      Symbols.SPACE :
-      Symbols.NOTHING;
-    const spaceBeforeToken = token.is(Symbols.CLOSING_PARENTHESIS) ?
-      Symbols.NOTHING :
-      this.addSpace();
+    const spaceAfterToken = token.isType(TokenTypes.KEYWORD)
+      ? Symbols.SPACE
+      : Symbols.NOTHING;
+    const spaceBeforeToken = token.is(Symbols.CLOSING_PARENTHESIS)
+      ? Symbols.NOTHING
+      : this.addSpace();
     return spaceBeforeToken + token.value + spaceAfterToken;
   }
 
