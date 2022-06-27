@@ -1,4 +1,3 @@
-
 import { Utils } from '../../utils/utils.js';
 import { STATEMENT_KEYWORD_LIST } from '../parser.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';

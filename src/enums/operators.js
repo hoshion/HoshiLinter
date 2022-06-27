@@ -1,4 +1,3 @@
-
 export const Operators = {
   ARITHMETIC: 'arithmetic-operator',
   LOGICAL: 'logical-operator',

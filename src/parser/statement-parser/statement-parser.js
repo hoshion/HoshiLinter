@@ -1,4 +1,3 @@
-
 import { Statement } from './statement.js';
 import { ExpressionParser } from '../expression-parser/expression-parser.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';

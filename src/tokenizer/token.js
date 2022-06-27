@@ -1,4 +1,3 @@
-
 import { Operators } from '../enums/operators.js';
 
 export class Token {

@@ -1,24 +1,15 @@
-
 import { Symbols } from '../../enums/symbols.js';
 import { Utils } from '../../utils/utils.js';
 import { SurrounderUtils } from '../../utils/surrounder-utils.js';
 import { Keywords } from '../../enums/keywords.js';
 import { TokenTypes } from '../../enums/token-types.js';
+import { StructureLinter } from '../structure-linter.js';
 
-export class StatementLinter {
+export class StatementLinter extends StructureLinter {
   str = Symbols.NOTHING;
-  statement;
-  structure;
-  linter;
-
-  constructor(statement, structure, linter) {
-    this.statement = statement;
-    this.structure = structure;
-    this.linter = linter;
-  }
 
   lint() {
-    if (this.statement.type === Keywords.IMPORT) {
+    if (this.current.type === Keywords.IMPORT) {
       const arr = Utils.plane(this.statement.parts);
       for (const token of arr) {
         this.lintToken(token);
@@ -26,7 +17,7 @@ export class StatementLinter {
       return this.str;
     }
 
-    for (let i = 0; i < this.statement.parts.length; i++) {
+    for (let i = 0; i < this.current.parts.length; i++) {
       this.str += this.lintPart(i);
     }
 
@@ -35,10 +26,10 @@ export class StatementLinter {
   }
 
   lintPart(index) {
-    const part = this.statement.parts[index];
+    const part = this.current.parts[index];
 
     if (this.linter.isStructure(part.constructor.name)) {
-      return this.linter.lintStructure(part, this.statement.parts);
+      return this.linter.lintStructure(part, this.current.parts);
     }
 
     return this.lintToken(part);
@@ -58,12 +49,12 @@ export class StatementLinter {
     SurrounderUtils.setSpaceBetweenStructures(
       this,
       this.structure,
-      this.statement
+      this.current
     );
     SurrounderUtils.setNewLineIfNext(
       this,
       this.structure,
-      this.structure.indexOf(this.statement)
+      this.structure.indexOf(this.current)
     );
   }
 

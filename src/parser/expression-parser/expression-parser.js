@@ -1,10 +1,10 @@
-
 import { Expression } from './expression.js';
 import { BRACKETS, BRACKETS_MAP, Utils } from '../../utils/utils.js';
 import { StatementParser } from '../statement-parser/statement-parser.js';
 import { ScopeParser } from '../scope-parser/scope-parser.js';
 import { Symbols } from '../../enums/symbols.js';
 import { Keywords } from '../../enums/keywords.js';
+import { TokenTypes } from '../../enums/token-types.js';
 
 export class ExpressionParser {
   parser;
@@ -23,7 +23,7 @@ export class ExpressionParser {
     this.searchingArray = Utils.joinTokens(
       filteredArray,
       this.parser.tokenizer.allTokens,
-      'semicolon'
+      TokenTypes.SEMICOLON
     );
     this.expression = new Expression();
     this.findExpression();

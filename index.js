@@ -1,4 +1,3 @@
-
 import { Tokenizer } from './src/tokenizer/tokenizer.js';
 import fs from 'fs';
 import { execSync } from 'child_process';

@@ -1,23 +1,14 @@
-
 import { Symbols } from '../../enums/symbols.js';
 import { TAB } from '../linter.js';
 import { Token } from '../../tokenizer/token.js';
 import { Keywords } from '../../enums/keywords.js';
+import { StructureLinter } from '../structure-linter.js';
 
-export class ScopeLinter {
+export class ScopeLinter extends StructureLinter {
   str = Symbols.NOTHING;
-  scope;
-  structure;
-  linter;
   isTabbed = true;
   isNewLinedBefore = true;
   isBraced = false;
-
-  constructor(scope, structure, linter) {
-    this.scope = scope;
-    this.structure = structure;
-    this.linter = linter;
-  }
 
   lint() {
     if (this.checkPreviousToken(Keywords.ELSE)) {
@@ -27,7 +18,7 @@ export class ScopeLinter {
 
     this.addTab();
 
-    for (let i = 0; i < this.scope.parts.length; i++) {
+    for (let i = 0; i < this.current.parts.length; i++) {
       this.str += this.lintPart(i);
     }
 
@@ -36,10 +27,10 @@ export class ScopeLinter {
   }
 
   lintPart(index) {
-    const part = this.scope.parts[index];
+    const part = this.current.parts[index];
 
     if (this.linter.isStructure(part.constructor.name)) {
-      return this.linter.lintStructure(part, this.scope.parts);
+      return this.linter.lintStructure(part, this.current.parts);
     }
 
     return this.lintToken(part);
@@ -60,7 +51,7 @@ export class ScopeLinter {
   }
 
   checkPreviousToken(value) {
-    const index = this.structure.indexOf(this.scope) - 1;
+    const index = this.structure.indexOf(this.current) - 1;
     const part = this.structure[index];
     return part && part instanceof Token && part.is(value);
   }

@@ -1,4 +1,3 @@
-
 import { Keywords } from '../../enums/keywords.js';
 import { Symbols } from '../../enums/symbols.js';
 import { Structures } from '../../enums/structures.js';

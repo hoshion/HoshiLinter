@@ -1,51 +1,33 @@
-
 import { Symbols } from '../../enums/symbols.js';
 import { ExpressionSurrounder } from './expression-surrounder.js';
 import { TAB } from '../linter.js';
 import { TokenTypes } from '../../enums/token-types.js';
 import { Operators } from '../../enums/operators.js';
 import { Token } from '../../tokenizer/token.js';
+import { BRACKETS_MAP } from '../../utils/utils.js';
+import { StructureLinter } from '../structure-linter.js';
 
-const BRACKETS = [
-  [Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS],
-  [Symbols.OPENING_BRACE, Symbols.CLOSING_BRACE],
-  [Symbols.CLOSING_BRACKET, Symbols.CLOSING_BRACKET]
-];
-
-export class ExpressionLinter {
+export class ExpressionLinter extends StructureLinter {
   str = Symbols.NOTHING;
-  expression;
-  structure;
-  linter;
   index;
 
-  constructor(expression, structure, linter) {
-    this.expression = expression;
-    this.structure = structure;
-    this.linter = linter;
-  }
-
   lint() {
-    for (
-      this.index = 0;
-      this.index < this.expression.parts.length;
-      this.index++
-    ) {
+    for (this.index = 0; this.index < this.current.parts.length; this.index++) {
       this.str += this.lintPart();
     }
 
     this.str = new ExpressionSurrounder(this.linter, this.str).surround(
-      this.expression,
+      this.current,
       this.structure
     );
     return this.str;
   }
 
   lintPart() {
-    const part = this.expression.parts[this.index];
+    const part = this.current.parts[this.index];
 
     if (this.linter.isStructure(part.constructor.name)) {
-      return this.linter.lintStructure(part, this.expression.parts);
+      return this.linter.lintStructure(part, this.current.parts);
     }
 
     return this.lintToken(part);
@@ -113,7 +95,7 @@ export class ExpressionLinter {
   }
 
   getNext() {
-    return this.expression.parts[this.index + 1];
+    return this.current.parts[this.index + 1];
   }
 
   isNewLine() {
@@ -124,7 +106,7 @@ export class ExpressionLinter {
       [Symbols.OPENING_ANGLE, 0]
     ]);
     for (let i = 0; i < this.str.length; i++) {
-      for (const [open, close] of BRACKETS) {
+      for (const [open, close] of BRACKETS_MAP) {
         indexes.set(open, this.bracketIndex(this.str[i], open, close, i));
       }
     }

@@ -1,3 +1,4 @@
+import { Symbols } from '../enums/symbols.js';
 
 export const BRACKETS_MAP = new Map([
   [Symbols.OPENING_BRACKET, Symbols.CLOSING_BRACKET],
@@ -6,9 +7,12 @@ export const BRACKETS_MAP = new Map([
 ]);
 
 export const BRACKETS = [
-  Symbols.OPENING_BRACKET, Symbols.CLOSING_BRACKET, 
-  Symbols.OPENING_BRACE, Symbols.CLOSING_BRACE, 
-  Symbols.OPENING_PARENTHESIS, Symbols.CLOSING_PARENTHESIS,
+  Symbols.OPENING_BRACKET,
+  Symbols.CLOSING_BRACKET,
+  Symbols.OPENING_BRACE,
+  Symbols.CLOSING_BRACE,
+  Symbols.OPENING_PARENTHESIS,
+  Symbols.CLOSING_PARENTHESIS
 ];
 
 export class Utils {
@@ -29,7 +33,7 @@ export class Utils {
   static joinTokens(filteredTokens, allTokens, key) {
     const copyArray = Array.from(filteredTokens);
     for (const token of allTokens) {
-      if (token.type === key) {
+      if (token.isType(key)) {
         if (filteredTokens[0].index > token.index) continue;
         const index = this.findIndex(copyArray, token.index);
         copyArray.splice(index, 0, token);
